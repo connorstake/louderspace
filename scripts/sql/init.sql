@@ -47,3 +47,13 @@ CREATE TABLE IF NOT EXISTS playlists (
     song_id INT NOT NULL REFERENCES songs(id),
     position INT NOT NULL
     );
+
+
+CREATE TABLE IF NOT EXISTS stations (
+                                        id SERIAL PRIMARY KEY,
+                                        name VARCHAR(100) NOT NULL,
+    tags TEXT NOT NULL -- storing tags as a comma-separated string
+    );
+
+-- Make sure your songs table has a tags column
+ALTER TABLE songs ADD COLUMN IF NOT EXISTS tags TEXT;
