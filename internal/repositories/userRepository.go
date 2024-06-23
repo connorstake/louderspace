@@ -41,8 +41,8 @@ func (r *UserDatabase) UserByID(userID int) (*models.User, error) {
 
 func (r *UserDatabase) UserByUsername(username string) (*models.User, error) {
 	user := &models.User{}
-	query := "SELECT id, username, email, created_at FROM users WHERE username = $1"
-	if err := r.db.QueryRow(query, username).Scan(&user.ID, &user.Username, &user.Email, &user.CreatedAt); err != nil {
+	query := "SELECT id, username, email, password, created_at FROM users WHERE username = $1"
+	if err := r.db.QueryRow(query, username).Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.CreatedAt); err != nil {
 		return nil, err
 	}
 	return user, nil
