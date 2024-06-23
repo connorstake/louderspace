@@ -108,15 +108,8 @@ func (h *StationAPI) GetAllStations(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(stations)
 }
 
-func (h *StationAPI) GetSongsForStation(w http.ResponseWriter, r *http.Request) {
-	idStr := strings.TrimPrefix(r.URL.Path, "/stations/")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		http.Error(w, "Invalid station ID", http.StatusBadRequest)
-		return
-	}
-
-	songs, err := h.stationService.GetSongsForStation(id)
+func (h *StationAPI) GetSongsForStationByID(w http.ResponseWriter, r *http.Request, stationID int) {
+	songs, err := h.stationService.GetSongsForStation(stationID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

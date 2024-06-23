@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"fmt"
 	"louderspace/internal/models"
 	"strings"
 )
@@ -74,14 +75,14 @@ func (r *StationDatabase) All() ([]*models.Station, error) {
 
 func (r *StationDatabase) SongsByTags(tags []string) ([]*models.Song, error) {
 	var songs []*models.Song
-	query := "SELECT id, title, artist, genre, suno_api_id, is_generated, created_at FROM songs WHERE"
+	query := "SELECT id, title, artist, genre, suno_id, is_generated, created_at FROM songs WHERE"
 	var conditions []string
 	var args []interface{}
-	for _, tag := range tags {
-		conditions = append(conditions, "tags ILIKE ?")
+	for i, tag := range tags {
+		conditions = append(conditions, fmt.Sprintf("genre ILIKE $%d", i+1))
 		args = append(args, "%"+tag+"%")
 	}
-	query += strings.Join(conditions, " OR ")
+	query += " " + strings.Join(conditions, " OR ")
 
 	rows, err := r.db.Query(query, args...)
 	if err != nil {
@@ -91,7 +92,7 @@ func (r *StationDatabase) SongsByTags(tags []string) ([]*models.Song, error) {
 
 	for rows.Next() {
 		song := &models.Song{}
-		if err := rows.Scan(&song.ID, &song.Title, &song.Artist, &song.Genre, &song.SunoAPIID, &song.IsGenerated, &song.CreatedAt); err != nil {
+		if err := rows.Scan(&song.ID, &song.Title, &song.Artist, &song.Genre, &song.SunoID, &song.IsGenerated, &song.CreatedAt); err != nil {
 			return nil, err
 		}
 		songs = append(songs, song)
