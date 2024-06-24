@@ -12,6 +12,8 @@ type SongStorage interface {
 	BySunoID(sunoID string) (*models.Song, error)
 	All() ([]*models.Song, error)
 	SongsByTags(tags []string) ([]*models.Song, error)
+	Delete(songID int) error
+	Update(song *models.Song) error
 }
 
 type SongDatabase struct {
@@ -90,4 +92,14 @@ func (r *SongDatabase) SongsByTags(tags []string) ([]*models.Song, error) {
 	}
 
 	return songs, nil
+}
+
+func (r *SongDatabase) Delete(songID int) error {
+	_, err := r.db.Exec("DELETE FROM songs WHERE id=$1", songID)
+	return err
+}
+
+func (r *SongDatabase) Update(song *models.Song) error {
+	_, err := r.db.Exec("UPDATE songs SET title=$1, artist=$2, genre=$3, suno_id=$4, is_generated=$5 WHERE id=$6", song.Title, song.Artist, song.Genre, song.SunoID, song.IsGenerated, song.ID)
+	return err
 }

@@ -11,6 +11,7 @@ type UserManagement interface {
 	Register(username, password, email string) (*models.User, error)
 	Login(username, password string) (*models.User, error)
 	User(userID int) (*models.User, error)
+	Users() ([]*models.User, error)
 }
 
 type UserService struct {
@@ -56,4 +57,8 @@ func (s *UserService) Login(username, password string) (*models.User, error) {
 
 func (s *UserService) User(userID int) (*models.User, error) {
 	return s.userStorage.UserByID(userID)
+}
+
+func (s *UserService) Users() ([]*models.User, error) {
+	return s.userStorage.Users()
 }

@@ -54,3 +54,14 @@ func (h *UserAPI) Login(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
 }
+
+func (h *UserAPI) Users(w http.ResponseWriter, r *http.Request) {
+	users, err := h.userService.Users()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(users)
+}

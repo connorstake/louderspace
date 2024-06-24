@@ -14,6 +14,23 @@ import (
 	"strings"
 )
 
+// CORSMiddleware sets the CORS headers for incoming requests.
+func CORSMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		// Handle preflight requests
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	cfg, err := config.LoadConfig()
 	if err != nil {
@@ -25,6 +42,8 @@ func main() {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
+	mux := http.NewServeMux()
+
 	userStorage := repositories.NewUserDatabase(db)
 	songStorage := repositories.NewSongDatabase(db)
 	stationStorage := repositories.NewStationDatabase(db)
@@ -32,17 +51,18 @@ func main() {
 	userService := services.NewUserService(userStorage)
 	stationService := services.NewStationService(stationStorage)
 	playbackService := services.NewPlaybackService(stationStorage)
-	songService := services.NewSongService(songStorage)
+	songService := services.NewSongService(songStorage, stationStorage)
 
 	userAPI := api.NewUserAPI(userService)
 	stationAPI := api.NewStationAPI(stationService)
 	playbackAPI := api.NewPlaybackAPI(playbackService)
 	songAPI := api.NewSongAPI(songService)
 
-	http.HandleFunc("/register", userAPI.Register)
-	http.HandleFunc("/login", userAPI.Login)
+	mux.HandleFunc("/register", userAPI.Register)
+	mux.HandleFunc("/login", userAPI.Login)
+	mux.HandleFunc("/users", userAPI.Users)
 
-	http.HandleFunc("/stations/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/stations/", func(w http.ResponseWriter, r *http.Request) {
 		path := strings.TrimPrefix(r.URL.Path, "/stations/")
 		if strings.HasSuffix(path, "/songs") {
 			stationIDStr := strings.TrimSuffix(path, "/songs")
@@ -70,23 +90,32 @@ func main() {
 			}
 		}
 	})
-	http.HandleFunc("/playback/play", playbackAPI.Play)
-	http.HandleFunc("/playback/pause", playbackAPI.Pause)
-	http.HandleFunc("/playback/skip", playbackAPI.Skip)
-	http.HandleFunc("/playback/rewind", playbackAPI.Rewind)
-	http.HandleFunc("/playback/state", playbackAPI.GetPlaybackState)
+	mux.HandleFunc("/playback/play", playbackAPI.Play)
+	mux.HandleFunc("/playback/pause", playbackAPI.Pause)
+	mux.HandleFunc("/playback/skip", playbackAPI.Skip)
+	mux.HandleFunc("/playback/rewind", playbackAPI.Rewind)
+	mux.HandleFunc("/playback/state", playbackAPI.GetPlaybackState)
 
-	http.HandleFunc("/songs", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/songs", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "POST":
 			songAPI.CreateSong(w, r)
 		case "GET":
-			songAPI.GetSong(w, r)
+			idStr := r.URL.Query().Get("id")
+			if idStr == "" {
+				songAPI.GetAllSongs(w, r)
+			} else {
+				songAPI.GetSong(w, r)
+			}
+		case "PUT":
+			songAPI.UpdateSong(w, r)
+		case "DELETE":
+			songAPI.DeleteSong(w, r)
 		}
 	})
-	http.HandleFunc("/songs/suno", songAPI.GetSongBySunoID)
+	mux.HandleFunc("/songs/suno", songAPI.GetSongBySunoID)
 
 	log.Println("server is running on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", CORSMiddleware(mux)))
 
 }

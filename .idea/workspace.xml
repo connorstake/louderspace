@@ -4,24 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="add stations">
-      <change afterPath="$PROJECT_DIR$/docker-compose-restart.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/api/playbackHandler.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/api/playbackHandler_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/api/songHandler.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/models/playbackState.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/repositories/songRepository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/services/playbackService.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/services/playbackService_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/services/songService.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/sql/seed.sql" afterDir="false" />
+    <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="small changes">
+      <change afterPath="$PROJECT_DIR$/ui/src/components/layout/Navbar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/src/components/layout/SideBar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/src/hooks/useUsers.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/src/pages/DashboardPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/src/pages/SongsPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/src/pages/StationsPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/src/pages/UsersPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/src/routes.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/src/services/api.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/src/theme.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/stationHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/stationHandler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/models/song.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/models/song.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/repositories/stationRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repositories/stationRepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/docker/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/docker/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/sql/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sql/init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/songHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/songHandler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/userHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/userHandler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/repositories/songRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repositories/songRepository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/repositories/userRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repositories/userRepository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/services/songService.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/songService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/services/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/userService.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +33,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Go File" />
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -69,6 +72,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "go.vgo",
+    "ts.external.directory.path": "/Users/connorpayne/Code/unorganized/louderspace/ui/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -129,7 +133,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1719133189493</updated>
-      <workItem from="1719133190502" duration="16482000" />
+      <workItem from="1719133190502" duration="22875000" />
     </task>
     <task id="LOCAL-00001" summary="User Service initialized">
       <option name="closed" value="true" />
@@ -155,7 +159,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719142178135</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="small changes">
+      <option name="closed" value="true" />
+      <created>1719162890572</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1719162890572</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -165,7 +177,8 @@
     <MESSAGE value="User Service initialized" />
     <MESSAGE value="fix password hashing" />
     <MESSAGE value="add stations" />
-    <option name="LAST_COMMIT_MESSAGE" value="add stations" />
+    <MESSAGE value="small changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="small changes" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
