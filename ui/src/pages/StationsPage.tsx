@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Grid, Card, CardContent, CardActions, Button, TextField, Box, Select, MenuItem, FormControl, InputLabel, OutlinedInput, Chip } from '@mui/material';
+import { Container, Typography, Grid, Card, CardContent, CardActions, Button, TextField, Box, Select, MenuItem, FormControl, InputLabel, OutlinedInput, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,6 +14,8 @@ const StationsPage: React.FC = () => {
     const [newStationName, setNewStationName] = useState<string>('');
     const [newStationTags, setNewStationTags] = useState<string[]>([]);
     const [availableTags, setAvailableTags] = useState<string[]>([]);
+    const [selectedStationId, setSelectedStationId] = useState<number | null>(null);
+    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -46,6 +48,30 @@ const StationsPage: React.FC = () => {
             .catch(error => {
                 console.error('There was an error adding the station!', error);
             });
+    };
+
+    const handleDeleteStation = () => {
+        if (selectedStationId !== null) {
+            axios.delete(`http://localhost:8080/stations/${selectedStationId}`)
+                .then(() => {
+                    setStations(prevStations => prevStations.filter(station => station.id !== selectedStationId));
+                    setSelectedStationId(null);
+                    setOpen(false);
+                })
+                .catch(error => {
+                    console.error('There was an error deleting the station!', error);
+                });
+        }
+    };
+
+    const handleClickOpen = (stationId: number) => {
+        setSelectedStationId(stationId);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setSelectedStationId(null);
+        setOpen(false);
     };
 
     return (
@@ -102,11 +128,28 @@ const StationsPage: React.FC = () => {
                             </CardContent>
                             <CardActions>
                                 <Button size="small" onClick={() => navigate(`/stations/${station.id}/songs`)}>View Songs</Button>
+                                <Button size="small" color="secondary" onClick={() => handleClickOpen(station.id)}>Delete</Button>
                             </CardActions>
                         </Card>
                     </Grid>
                 ))}
             </Grid>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Delete Station</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete this station? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleDeleteStation} color="secondary">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 };

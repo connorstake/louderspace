@@ -1,8 +1,9 @@
-// Intializes the application backend and starts the server
 package main
 
 import (
 	"database/sql"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"log"
 	"louderspace/config"
@@ -10,26 +11,7 @@ import (
 	"louderspace/internal/repositories"
 	"louderspace/internal/services"
 	"net/http"
-	"strconv"
-	"strings"
 )
-
-// CORSMiddleware sets the CORS headers for incoming requests.
-func CORSMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-
-		// Handle preflight requests
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
-		next.ServeHTTP(w, r)
-	})
-}
 
 func main() {
 	cfg, err := config.LoadConfig()
@@ -41,8 +23,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
-
-	mux := http.NewServeMux()
 
 	userStorage := repositories.NewUserDatabase(db)
 	songStorage := repositories.NewSongDatabase(db)
@@ -61,66 +41,38 @@ func main() {
 	songAPI := api.NewSongAPI(songService)
 	tagAPI := api.NewTagAPI(tagService)
 
-	mux.HandleFunc("/register", userAPI.Register)
-	mux.HandleFunc("/login", userAPI.Login)
-	mux.HandleFunc("/users", userAPI.Users)
+	r := mux.NewRouter()
 
-	mux.HandleFunc("/stations", func(w http.ResponseWriter, r *http.Request) {
-		path := strings.TrimPrefix(r.URL.Path, "/stations")
-		if strings.HasSuffix(path, "/songs") {
-			stationIDStr := strings.TrimSuffix(path, "/songs")
-			if stationIDStr != "" {
-				stationID, err := strconv.Atoi(stationIDStr)
-				if err != nil {
-					http.Error(w, "Invalid station ID", http.StatusBadRequest)
-					return
-				}
-				// Call GetSongsForStation with the station ID
-				stationAPI.GetSongsForStationByID(w, r, stationID)
-			} else {
-				http.NotFound(w, r)
-			}
-		} else {
-			switch r.Method {
-			case "POST":
-				stationAPI.CreateStation(w, r)
-			case "PUT":
-				stationAPI.UpdateStation(w, r)
-			case "DELETE":
-				stationAPI.DeleteStation(w, r)
-			case "GET":
-				stationAPI.GetAllStations(w, r)
-			}
-		}
-	})
-	mux.HandleFunc("/playback/play", playbackAPI.Play)
-	mux.HandleFunc("/playback/pause", playbackAPI.Pause)
-	mux.HandleFunc("/playback/skip", playbackAPI.Skip)
-	mux.HandleFunc("/playback/rewind", playbackAPI.Rewind)
-	mux.HandleFunc("/playback/state", playbackAPI.GetPlaybackState)
+	r.HandleFunc("/register", userAPI.Register).Methods("POST")
+	r.HandleFunc("/login", userAPI.Login).Methods("POST")
+	r.HandleFunc("/users", userAPI.Users).Methods("GET")
 
-	mux.HandleFunc("/songs", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "POST":
-			songAPI.CreateSong(w, r)
-		case "GET":
-			idStr := r.URL.Query().Get("id")
-			if idStr == "" {
-				songAPI.GetAllSongs(w, r)
-			} else {
-				songAPI.GetSong(w, r)
-			}
-		case "PUT":
-			songAPI.UpdateSong(w, r)
-		case "DELETE":
-			songAPI.DeleteSong(w, r)
-		}
-	})
-	mux.HandleFunc("/songs/suno", songAPI.GetSongBySunoID)
+	r.HandleFunc("/stations", stationAPI.CreateStation).Methods("POST")
+	r.HandleFunc("/stations", stationAPI.GetAllStations).Methods("GET")
+	r.HandleFunc("/stations/{id:[0-9]+}/songs", stationAPI.GetSongsForStationByID).Methods("GET")
+	r.HandleFunc("/stations/{id:[0-9]+}", stationAPI.DeleteStation).Methods("DELETE")
 
-	mux.HandleFunc("/tags", tagAPI.GetTags)
+	r.HandleFunc("/playback/play", playbackAPI.Play).Methods("POST")
+	r.HandleFunc("/playback/pause", playbackAPI.Pause).Methods("POST")
+	r.HandleFunc("/playback/skip", playbackAPI.Skip).Methods("POST")
+	r.HandleFunc("/playback/rewind", playbackAPI.Rewind).Methods("POST")
+	r.HandleFunc("/playback/state", playbackAPI.GetPlaybackState).Methods("GET")
+
+	r.HandleFunc("/songs", songAPI.CreateSong).Methods("POST")
+	r.HandleFunc("/songs", songAPI.GetAllSongs).Methods("GET")
+	r.HandleFunc("/songs", songAPI.UpdateSong).Methods("PUT")
+	r.HandleFunc("/songs", songAPI.DeleteSong).Methods("DELETE")
+	r.HandleFunc("/songs/{id:[0-9]+}", songAPI.GetSong).Methods("GET")
+	r.HandleFunc("/songs/suno", songAPI.GetSongBySunoID).Methods("GET")
+
+	r.HandleFunc("/tags", tagAPI.GetTags).Methods("GET")
+
+	corsMiddleware := handlers.CORS(
+		handlers.AllowedOrigins([]string{"*"}), // Adjust the allowed origins as needed
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+	)
 
 	log.Println("server is running on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", CORSMiddleware(mux)))
-
+	log.Fatal(http.ListenAndServe(":8080", corsMiddleware(r)))
 }
