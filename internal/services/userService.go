@@ -8,10 +8,11 @@ import (
 )
 
 type UserManagement interface {
-	Register(username, password, email string) (*models.User, error)
+	Register(username, password, email string, role models.Role) (*models.User, error)
 	Login(username, password string) (*models.User, error)
 	User(userID int) (*models.User, error)
 	Users() ([]*models.User, error)
+	GetUserByUsername(username string) (*models.User, error)
 }
 
 type UserService struct {
@@ -22,7 +23,7 @@ func NewUserService(userStorage repositories.UserStorage) UserManagement {
 	return &UserService{userStorage}
 }
 
-func (s *UserService) Register(username, password, email string) (*models.User, error) {
+func (s *UserService) Register(username, password, email string, role models.Role) (*models.User, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
@@ -32,6 +33,7 @@ func (s *UserService) Register(username, password, email string) (*models.User, 
 		Username:  username,
 		Password:  string(hashedPassword),
 		Email:     email,
+		Role:      role,
 		CreatedAt: time.Now(),
 	}
 
@@ -61,4 +63,8 @@ func (s *UserService) User(userID int) (*models.User, error) {
 
 func (s *UserService) Users() ([]*models.User, error) {
 	return s.userStorage.Users()
+}
+
+func (s *UserService) GetUserByUsername(username string) (*models.User, error) {
+	return s.userStorage.UserByUsername(username)
 }

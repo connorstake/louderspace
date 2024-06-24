@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	_ "github.com/lib/pq"
 	"louderspace/internal/models"
 )
 
@@ -13,30 +12,23 @@ type UserStorage interface {
 	Users() ([]*models.User, error)
 }
 
-// SQLDatabase TODO: Move to appropriate location
-type SQLDatabase interface {
-	QueryRow(query string, args ...interface{}) *sql.Row
-	Exec(query string, args ...interface{}) (sql.Result, error)
-	Query(query string, args ...interface{}) (*sql.Rows, error)
-}
-
 type UserDatabase struct {
-	db SQLDatabase
+	db *sql.DB
 }
 
-func NewUserDatabase(db SQLDatabase) UserStorage {
+func NewUserDatabase(db *sql.DB) UserStorage {
 	return &UserDatabase{db}
 }
 
 func (r *UserDatabase) Save(user *models.User) error {
-	query := "INSERT INTO users (username, password, email, created_at) VALUES ($1, $2, $3, $4) RETURNING id"
-	return r.db.QueryRow(query, user.Username, user.Password, user.Email, user.CreatedAt).Scan(&user.ID)
+	query := "INSERT INTO users (username, password, email, role, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id"
+	return r.db.QueryRow(query, user.Username, user.Password, user.Email, user.Role, user.CreatedAt).Scan(&user.ID)
 }
 
 func (r *UserDatabase) UserByID(userID int) (*models.User, error) {
 	user := &models.User{}
-	query := "SELECT id, username, email, created_at FROM users WHERE id = $1"
-	if err := r.db.QueryRow(query, userID).Scan(&user.ID, &user.Username, &user.Email, &user.CreatedAt); err != nil {
+	query := "SELECT id, username, email, role, created_at FROM users WHERE id = $1"
+	if err := r.db.QueryRow(query, userID).Scan(&user.ID, &user.Username, &user.Email, &user.Role, &user.CreatedAt); err != nil {
 		return nil, err
 	}
 	return user, nil
@@ -44,16 +36,15 @@ func (r *UserDatabase) UserByID(userID int) (*models.User, error) {
 
 func (r *UserDatabase) UserByUsername(username string) (*models.User, error) {
 	user := &models.User{}
-	query := "SELECT id, username, email, password, created_at FROM users WHERE username = $1"
-	if err := r.db.QueryRow(query, username).Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.CreatedAt); err != nil {
+	query := "SELECT id, username, email, password, role, created_at FROM users WHERE username = $1"
+	if err := r.db.QueryRow(query, username).Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.Role, &user.CreatedAt); err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-// Users retrieves all users from the database.
 func (r *UserDatabase) Users() ([]*models.User, error) {
-	query := "SELECT id, username, email, created_at FROM users"
+	query := "SELECT id, username, email, role, created_at FROM users"
 	rows, err := r.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -63,7 +54,7 @@ func (r *UserDatabase) Users() ([]*models.User, error) {
 	var users []*models.User
 	for rows.Next() {
 		user := &models.User{}
-		if err := rows.Scan(&user.ID, &user.Username, &user.Email, &user.CreatedAt); err != nil {
+		if err := rows.Scan(&user.ID, &user.Username, &user.Email, &user.Role, &user.CreatedAt); err != nil {
 			return nil, err
 		}
 		users = append(users, user)
