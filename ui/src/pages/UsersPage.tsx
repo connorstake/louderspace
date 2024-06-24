@@ -1,7 +1,6 @@
 // src/pages/UsersPage.tsx
 import React from 'react';
 import Navbar from '../components/layout/Navbar';
-import Sidebar from '../components/layout/SideBar';
 import useUsers from '../hooks/useUsers';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 
@@ -11,7 +10,6 @@ const UsersPage: React.FC = () => {
     return (
         <div>
             <Navbar />
-        <Sidebar />
         <main style={{ marginLeft: 240, padding: 16 }}>
     <h1>Users</h1>
     {loading ? (

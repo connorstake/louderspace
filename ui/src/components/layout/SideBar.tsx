@@ -1,11 +1,10 @@
-// src/components/layout/Sidebar.tsx
 import React from 'react';
-import { Drawer, List, ListItem, ListItemText } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { List, ListItem, ListItemText } from '@mui/material';
 
-const Sidebar: React.FC = () => {
+const SideBar: React.FC = () => {
     return (
-        <Drawer variant="permanent" anchor="left">
+        <div style={{ width: '250px', height: '100vh', backgroundColor: '#f0f0f0', padding: '1rem' }}>
             <List>
                 <ListItem button component={Link} to="/">
                     <ListItemText primary="Dashboard" />
@@ -22,9 +21,10 @@ const Sidebar: React.FC = () => {
                 <ListItem button component={Link} to="/settings">
                     <ListItemText primary="Settings" />
                 </ListItem>
+                {/* Add more links as needed */}
             </List>
-        </Drawer>
+        </div>
     );
 };
 
-export default Sidebar;
+export default SideBar;

@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="small changes">
-      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
+    <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="add music playing">
+      <change afterPath="$PROJECT_DIR$/ui/src/components/layout/Layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose-restart.sh" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose-restart.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/sql/seed.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sql/seed.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/src/components/layout/SideBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/components/layout/SideBar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ui/src/pages/SongsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/pages/SongsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/src/pages/UsersPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/pages/UsersPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/src/routes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/routes.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +123,7 @@
       <updated>1719133189493</updated>
       <workItem from="1719133190502" duration="22875000" />
       <workItem from="1719223622678" duration="291000" />
-      <workItem from="1719223985590" duration="2294000" />
+      <workItem from="1719223985590" duration="5559000" />
     </task>
     <task id="LOCAL-00001" summary="User Service initialized">
       <option name="closed" value="true" />
@@ -156,7 +157,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719162890572</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add music playing">
+      <option name="closed" value="true" />
+      <created>1719226291660</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1719226291660</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,7 +176,8 @@
     <MESSAGE value="fix password hashing" />
     <MESSAGE value="add stations" />
     <MESSAGE value="small changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="small changes" />
+    <MESSAGE value="add music playing" />
+    <option name="LAST_COMMIT_MESSAGE" value="add music playing" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
