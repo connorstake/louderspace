@@ -9,7 +9,6 @@ const UsersPage: React.FC = () => {
 
     return (
         <div>
-            <Navbar />
         <main style={{ marginLeft: 240, padding: 16 }}>
     <h1>Users</h1>
     {loading ? (
