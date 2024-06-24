@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"louderspace/internal/models"
 	"louderspace/internal/services"
 	"net/http"
 	"strconv"
@@ -115,13 +116,8 @@ func (h *SongAPI) GetSongsForStation(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *SongAPI) UpdateSong(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Query().Get("id")
-	if idStr == "" {
-		http.Error(w, "Missing song ID", http.StatusBadRequest)
-		return
-	}
-
-	id, err := strconv.Atoi(idStr)
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		http.Error(w, "Invalid song ID", http.StatusBadRequest)
 		return
@@ -130,18 +126,26 @@ func (h *SongAPI) UpdateSong(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Title       string   `json:"title"`
 		Artist      string   `json:"artist"`
-		Genre       string   `json:"genre"`
+		Genre       string   `json:"genre"` // Update to array
 		SunoID      string   `json:"suno_id"`
 		IsGenerated bool     `json:"is_generated"`
-		Tags        []string `json:"tags"`
+		Tags        []string `json:"tags"` // Add tags field
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	song, err := h.songService.UpdateSong(id, req.Title, req.Artist, req.Genre, req.SunoID, req.IsGenerated, req.Tags)
-	if err != nil {
+	song := &models.Song{
+		ID:          id,
+		Title:       req.Title,
+		Artist:      req.Artist,
+		Genre:       req.Genre,
+		SunoID:      req.SunoID,
+		IsGenerated: req.IsGenerated,
+	}
+
+	if err := h.songService.UpdateSong(song, req.Tags); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -152,13 +156,7 @@ func (h *SongAPI) UpdateSong(w http.ResponseWriter, r *http.Request) {
 
 func (h *SongAPI) DeleteSong(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	idStr := vars["id"]
-	if idStr == "" {
-		http.Error(w, "Missing song ID", http.StatusBadRequest)
-		return
-	}
-
-	id, err := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		http.Error(w, "Invalid song ID", http.StatusBadRequest)
 		return

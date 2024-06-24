@@ -80,7 +80,7 @@ const SongsPage: React.FC = () => {
     const handleOpenEdit = (song: Song) => {
         setSelectedSong(song);
         setNewSong(song);
-        setNewSongTags(song.tags);
+        setNewSongTags(newSongTags);
         setOpenEdit(true);
     };
 
@@ -104,7 +104,7 @@ const SongsPage: React.FC = () => {
 
     const handleAddSong = async () => {
         try {
-            const response = await axios.post<Song>('http://localhost:8080/songs', newSong);
+            const response = await axios.post<Song>('http://localhost:8080/songs', {...newSong, tags: newSongTags});
             setSongs([...songs, response.data]);
             setNewSongTags([]);
             handleCloseAdd();
@@ -115,7 +115,7 @@ const SongsPage: React.FC = () => {
 
     const handleEditSong = async () => {
         try {
-            const response = await axios.put<Song>(`http://localhost:8080/songs/${selectedSong?.id}`, newSong);
+            const response = await axios.put<Song>(`http://localhost:8080/songs/${selectedSong?.id}`, {...newSong, tags: newSongTags});
             setSongs(songs.map(song => song.id === response.data.id ? response.data : song));
             setNewSongTags([]);
             handleCloseEdit();
@@ -223,7 +223,7 @@ const SongsPage: React.FC = () => {
                         <Select
                             labelId="tags-label"
                             multiple
-                            value={newSong.tags}
+                            value={newSongTags}
                             onChange={(e) => setNewSongTags(e.target.value as string[])}
                             input={<OutlinedInput id="select-multiple-chip" label="Tags" />}
                             renderValue={(selected) => (
@@ -288,7 +288,7 @@ const SongsPage: React.FC = () => {
                         <Select
                             labelId="tags-label"
                             multiple
-                            value={newSong.tags}
+                            value={newSongTags}
                             onChange={(e) => setNewSongTags(e.target.value as string[])}
                             input={<OutlinedInput id="select-multiple-chip" label="Tags" />}
                             renderValue={(selected) => (

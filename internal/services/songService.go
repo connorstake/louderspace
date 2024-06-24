@@ -8,11 +8,11 @@ import (
 
 type SongManagement interface {
 	CreateSong(title, artist, genre, sunoID string, isGenerated bool, tags []string) (*models.Song, error)
-	UpdateSong(id int, title, artist, genre, sunoID string, isGenerated bool, tags []string) (*models.Song, error)
 	GetSongByID(songID int) (*models.Song, error)
 	GetSongBySunoID(sunoID string) (*models.Song, error)
 	GetAllSongs() ([]*models.Song, error)
 	GetSongsForStation(stationID int) ([]*models.Song, error)
+	UpdateSong(song *models.Song, tags []string) error
 	DeleteSong(id int) error
 }
 
@@ -39,19 +39,12 @@ func (s *SongService) CreateSong(title, artist, genre, sunoID string, isGenerate
 	return song, nil
 }
 
-func (s *SongService) UpdateSong(id int, title, artist, genre, sunoID string, isGenerated bool, tags []string) (*models.Song, error) {
-	song := &models.Song{
-		ID:          id,
-		Title:       title,
-		Artist:      artist,
-		Genre:       genre,
-		SunoID:      sunoID,
-		IsGenerated: isGenerated,
-	}
+func (s *SongService) UpdateSong(song *models.Song, tags []string) error {
+
 	if err := s.songStorage.Update(song, tags); err != nil {
-		return nil, err
+		return err
 	}
-	return song, nil
+	return nil
 }
 
 func (s *SongService) GetSongByID(songID int) (*models.Song, error) {

@@ -52,29 +52,33 @@ func (r *SongDatabase) Update(song *models.Song, tags []string) error {
 	if err != nil {
 		return err
 	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
 
 	query := "UPDATE songs SET title = $1, artist = $2, genre = $3, suno_id = $4, is_generated = $5 WHERE id = $6"
 	_, err = tx.Exec(query, song.Title, song.Artist, song.Genre, song.SunoID, song.IsGenerated, song.ID)
 	if err != nil {
-		tx.Rollback()
 		return err
 	}
 
 	_, err = tx.Exec("DELETE FROM song_tags WHERE song_id = $1", song.ID)
 	if err != nil {
-		tx.Rollback()
 		return err
 	}
 
 	for _, tag := range tags {
 		_, err := tx.Exec("INSERT INTO song_tags (song_id, tag_id) VALUES ($1, (SELECT id FROM tags WHERE name = $2))", song.ID, tag)
 		if err != nil {
-			tx.Rollback()
 			return err
 		}
 	}
 
-	return tx.Commit()
+	return nil
 }
 
 func (r *SongDatabase) ByID(id int) (*models.Song, error) {
