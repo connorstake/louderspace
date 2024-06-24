@@ -26,6 +26,8 @@ func (s *MockUserStorage) Save(user *models.User) error {
 	if user.ID == 0 {
 		user.ID = s.nextID
 		s.nextID++
+	} else if _, exists := s.users[user.ID]; !exists {
+		return errors.New("user not found")
 	}
 
 	s.users[user.ID] = user
@@ -55,4 +57,16 @@ func (s *MockUserStorage) UserByUsername(username string) (*models.User, error) 
 	}
 
 	return nil, errors.New("user not found")
+}
+
+func (s *MockUserStorage) Users() ([]*models.User, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	var users []*models.User
+	for _, user := range s.users {
+		users = append(users, user)
+	}
+
+	return users, nil
 }

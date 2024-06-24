@@ -38,6 +38,14 @@ func (s *SongService) CreateSong(title, artist, genre, sunoID string, isGenerate
 		logger.Error("Failed to create song:", err)
 		return nil, err
 	}
+	// Fetch updated tags
+	updatedTags, err := s.songStorage.GetTagsBySongID(song.ID)
+	if err != nil {
+		logger.Error("Failed to fetch updated tags:", err)
+		return nil, err
+	}
+
+	song.Tags = updatedTags
 	return song, nil
 }
 
