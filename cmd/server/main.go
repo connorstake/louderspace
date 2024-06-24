@@ -66,6 +66,9 @@ func main() {
 	r.HandleFunc("/songs/suno", songAPI.GetSongBySunoID).Methods("GET")
 
 	r.HandleFunc("/tags", tagAPI.GetTags).Methods("GET")
+	r.HandleFunc("/tags", tagAPI.CreateTag).Methods("POST")
+	r.HandleFunc("/tags/{id:[0-9]+}", tagAPI.UpdateTag).Methods("PUT")
+	r.HandleFunc("/tags/{id:[0-9]+}", tagAPI.DeleteTag).Methods("DELETE")
 
 	corsMiddleware := handlers.CORS(
 		handlers.AllowedOrigins([]string{"*"}), // Adjust the allowed origins as needed

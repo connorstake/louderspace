@@ -18,6 +18,9 @@ const SideBar: React.FC = () => {
                 <ListItem button component={Link} to="/songs">
                     <ListItemText primary="Songs" />
                 </ListItem>
+                <ListItem button component={Link} to="/tags">
+                    <ListItemText primary="Tags" />
+                </ListItem>
                 <ListItem button component={Link} to="/settings">
                     <ListItemText primary="Settings" />
                 </ListItem>

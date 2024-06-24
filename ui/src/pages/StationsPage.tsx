@@ -15,7 +15,8 @@ const StationsPage: React.FC = () => {
     const [newStationTags, setNewStationTags] = useState<string[]>([]);
     const [availableTags, setAvailableTags] = useState<string[]>([]);
     const [selectedStationId, setSelectedStationId] = useState<number | null>(null);
-    const [open, setOpen] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openAdd, setOpenAdd] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -44,6 +45,7 @@ const StationsPage: React.FC = () => {
                 setStations(prevStations => [...prevStations, response.data]);
                 setNewStationName('');
                 setNewStationTags([]);
+                setOpenAdd(false);
             })
             .catch(error => {
                 console.error('There was an error adding the station!', error);
@@ -56,7 +58,7 @@ const StationsPage: React.FC = () => {
                 .then(() => {
                     setStations(prevStations => prevStations.filter(station => station.id !== selectedStationId));
                     setSelectedStationId(null);
-                    setOpen(false);
+                    setOpenDelete(false);
                 })
                 .catch(error => {
                     console.error('There was an error deleting the station!', error);
@@ -64,14 +66,24 @@ const StationsPage: React.FC = () => {
         }
     };
 
-    const handleClickOpen = (stationId: number) => {
+    const handleClickOpenDelete = (stationId: number) => {
         setSelectedStationId(stationId);
-        setOpen(true);
+        setOpenDelete(true);
     };
 
-    const handleClose = () => {
+    const handleClickOpenAdd = () => {
+        setOpenAdd(true);
+    };
+
+    const handleCloseDelete = () => {
         setSelectedStationId(null);
-        setOpen(false);
+        setOpenDelete(false);
+    };
+
+    const handleCloseAdd = () => {
+        setNewStationName('');
+        setNewStationTags([]);
+        setOpenAdd(false);
     };
 
     return (
@@ -79,41 +91,9 @@ const StationsPage: React.FC = () => {
             <Typography variant="h4" component="h1" gutterBottom>
                 Stations
             </Typography>
-            <Box component="form" sx={{ mb: 4 }}>
-                <TextField
-                    label="Station Name"
-                    value={newStationName}
-                    onChange={(e) => setNewStationName(e.target.value)}
-                    fullWidth
-                    margin="normal"
-                />
-                <FormControl fullWidth margin="normal">
-                    <InputLabel id="tags-label">Tags</InputLabel>
-                    <Select
-                        labelId="tags-label"
-                        multiple
-                        value={newStationTags}
-                        onChange={(e) => setNewStationTags(e.target.value as string[])}
-                        input={<OutlinedInput id="select-multiple-chip" label="Tags" />}
-                        renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {selected.map((value) => (
-                                    <Chip key={value} label={value} />
-                                ))}
-                            </Box>
-                        )}
-                    >
-                        {availableTags.map((tag) => (
-                            <MenuItem key={tag} value={tag}>
-                                {tag}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                <Button variant="contained" color="primary" onClick={handleAddStation} sx={{ mt: 2 }}>
-                    Add Station
-                </Button>
-            </Box>
+            <Button variant="contained" color="primary" onClick={handleClickOpenAdd} sx={{ mb: 4 }}>
+                Add Station
+            </Button>
             <Grid container spacing={4}>
                 {stations.map((station) => (
                     <Grid item key={station.id} xs={12} sm={6} md={4}>
@@ -128,13 +108,13 @@ const StationsPage: React.FC = () => {
                             </CardContent>
                             <CardActions>
                                 <Button size="small" onClick={() => navigate(`/stations/${station.id}/songs`)}>View Songs</Button>
-                                <Button size="small" color="secondary" onClick={() => handleClickOpen(station.id)}>Delete</Button>
+                                <Button size="small" color="secondary" onClick={() => handleClickOpenDelete(station.id)}>Delete</Button>
                             </CardActions>
                         </Card>
                     </Grid>
                 ))}
             </Grid>
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={openDelete} onClose={handleCloseDelete}>
                 <DialogTitle>Delete Station</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -142,11 +122,54 @@ const StationsPage: React.FC = () => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={handleCloseDelete} color="primary">
                         Cancel
                     </Button>
                     <Button onClick={handleDeleteStation} color="secondary">
                         Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={openAdd} onClose={handleCloseAdd}>
+                <DialogTitle>Add Station</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="Station Name"
+                        value={newStationName}
+                        onChange={(e) => setNewStationName(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel id="tags-label">Tags</InputLabel>
+                        <Select
+                            labelId="tags-label"
+                            multiple
+                            value={newStationTags}
+                            onChange={(e) => setNewStationTags(e.target.value as string[])}
+                            input={<OutlinedInput id="select-multiple-chip" label="Tags" />}
+                            renderValue={(selected) => (
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value} />
+                                    ))}
+                                </Box>
+                            )}
+                        >
+                            {availableTags.map((tag) => (
+                                <MenuItem key={tag} value={tag}>
+                                    {tag}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAdd} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleAddStation} color="primary">
+                        Add
                     </Button>
                 </DialogActions>
             </Dialog>

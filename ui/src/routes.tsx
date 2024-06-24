@@ -6,6 +6,7 @@ import UsersPage from './pages/UsersPage';
 import StationsPage from './pages/StationsPage';
 import SongsPage from './pages/SongsPage';
 import Layout from './components/layout/Layout';
+import TagsPage from './pages/TagsPage';
 // import SettingsPage from './pages/SettingsPage';
 // import NotFoundPage from './pages/NotFoundPage';
 
@@ -18,6 +19,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="/stations" element={<StationsPage />} />
                 <Route path="/stations/:stationId/songs" element={<SongsPage />} />
                 <Route path="/songs" element={<SongsPage />} />
+                <Route path="/tags" element={<TagsPage />} />
                 {/*<Route path="/settings" element={<SettingsPage />} />*/}
                 {/*<Route path="*" element={<NotFoundPage />} />*/}
             </Routes>
