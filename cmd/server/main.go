@@ -47,23 +47,26 @@ func main() {
 	userStorage := repositories.NewUserDatabase(db)
 	songStorage := repositories.NewSongDatabase(db)
 	stationStorage := repositories.NewStationDatabase(db)
+	tagStorage := repositories.NewTagDatabase(db)
 
 	userService := services.NewUserService(userStorage)
 	stationService := services.NewStationService(stationStorage)
 	playbackService := services.NewPlaybackService(stationStorage)
 	songService := services.NewSongService(songStorage, stationStorage)
+	tagService := services.NewTagService(tagStorage)
 
 	userAPI := api.NewUserAPI(userService)
 	stationAPI := api.NewStationAPI(stationService)
 	playbackAPI := api.NewPlaybackAPI(playbackService)
 	songAPI := api.NewSongAPI(songService)
+	tagAPI := api.NewTagAPI(tagService)
 
 	mux.HandleFunc("/register", userAPI.Register)
 	mux.HandleFunc("/login", userAPI.Login)
 	mux.HandleFunc("/users", userAPI.Users)
 
-	mux.HandleFunc("/stations/", func(w http.ResponseWriter, r *http.Request) {
-		path := strings.TrimPrefix(r.URL.Path, "/stations/")
+	mux.HandleFunc("/stations", func(w http.ResponseWriter, r *http.Request) {
+		path := strings.TrimPrefix(r.URL.Path, "/stations")
 		if strings.HasSuffix(path, "/songs") {
 			stationIDStr := strings.TrimSuffix(path, "/songs")
 			if stationIDStr != "" {
@@ -114,6 +117,8 @@ func main() {
 		}
 	})
 	mux.HandleFunc("/songs/suno", songAPI.GetSongBySunoID)
+
+	mux.HandleFunc("/tags", tagAPI.GetTags)
 
 	log.Println("server is running on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", CORSMiddleware(mux)))

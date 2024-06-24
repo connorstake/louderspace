@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"louderspace/internal/services"
 	"net/http"
 	"strconv"
@@ -22,18 +23,24 @@ func (h *StationAPI) CreateStation(w http.ResponseWriter, r *http.Request) {
 		Tags []string `json:"tags"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Printf("Error decoding request body: %v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
+	log.Printf("CreateStation request: %v", req)
+
 	station, err := h.stationService.CreateStation(req.Name, req.Tags)
 	if err != nil {
+		log.Printf("Error creating station: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(station)
+	if err := json.NewEncoder(w).Encode(station); err != nil {
+		log.Printf("Error encoding response: %v", err)
+	}
 }
 
 func (h *StationAPI) UpdateStation(w http.ResponseWriter, r *http.Request) {
