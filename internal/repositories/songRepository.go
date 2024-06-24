@@ -68,16 +68,14 @@ func (r *SongDatabase) All() ([]*models.Song, error) {
 
 func (r *SongDatabase) SongsByTags(tags []string) ([]*models.Song, error) {
 	var songs []*models.Song
-	query := "SELECT id, title, artist, genre, suno_id, is_generated, created_at FROM songs WHERE"
-	var conditions []string
-	var args []interface{}
-	for _, tag := range tags {
-		conditions = append(conditions, "genre ILIKE ?")
-		args = append(args, "%"+tag+"%")
-	}
-	query += strings.Join(conditions, " OR ")
 
-	rows, err := r.db.Query(query, args...)
+	// Prepare the query
+	query := "SELECT id, title, artist, genre, suno_id, is_generated, created_at FROM songs WHERE genre @> $1::text[]"
+
+	// Convert tags to the format required by the query
+	tagArray := "{" + strings.Join(tags, ",") + "}"
+
+	rows, err := r.db.Query(query, tagArray)
 	if err != nil {
 		return nil, err
 	}
