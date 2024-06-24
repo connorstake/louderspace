@@ -49,6 +49,7 @@ func main() {
 
 	r.HandleFunc("/stations", stationAPI.CreateStation).Methods("POST")
 	r.HandleFunc("/stations", stationAPI.GetAllStations).Methods("GET")
+	r.HandleFunc("/stations/{id:[0-9]+}", stationAPI.UpdateStation).Methods("PUT")
 	r.HandleFunc("/stations/{id:[0-9]+}/songs", stationAPI.GetSongsForStationByID).Methods("GET")
 	r.HandleFunc("/stations/{id:[0-9]+}", stationAPI.DeleteStation).Methods("DELETE")
 

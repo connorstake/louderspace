@@ -78,3 +78,29 @@ func (h *StationAPI) DeleteStation(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func (h *StationAPI) UpdateStation(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Name string   `json:"name"`
+		Tags []string `json:"tags"`
+	}
+	stationID, err := strconv.Atoi(r.URL.Path[len("/stations/"):])
+	if err != nil {
+		http.Error(w, "Invalid station ID", http.StatusBadRequest)
+		return
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	station, err := h.stationService.UpdateStation(stationID, req.Name, req.Tags)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(station)
+}

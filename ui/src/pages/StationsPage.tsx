@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Grid, Card, CardContent, CardActions, Button, TextField, Box, Select, MenuItem, FormControl, InputLabel, OutlinedInput, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {
+    Container, Typography, Grid, Card, CardContent, CardActions, Button, TextField, Box, Select, MenuItem, FormControl,
+    InputLabel, OutlinedInput, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {Tag} from "./TagsPage";
 
 interface Station {
     id: number;
@@ -13,10 +19,11 @@ const StationsPage: React.FC = () => {
     const [stations, setStations] = useState<Station[]>([]);
     const [newStationName, setNewStationName] = useState<string>('');
     const [newStationTags, setNewStationTags] = useState<string[]>([]);
-    const [availableTags, setAvailableTags] = useState<string[]>([]);
-    const [selectedStationId, setSelectedStationId] = useState<number | null>(null);
+    const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+    const [selectedStation, setSelectedStation] = useState<Station | null>(null);
     const [openDelete, setOpenDelete] = useState(false);
     const [openAdd, setOpenAdd] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,7 +37,7 @@ const StationsPage: React.FC = () => {
             });
 
         // Fetch available tags from the backend
-        axios.get<string[]>('http://localhost:8080/tags')
+        axios.get<Tag[]>('http://localhost:8080/tags')
             .then(response => {
                 setAvailableTags(response.data);
             })
@@ -52,12 +59,28 @@ const StationsPage: React.FC = () => {
             });
     };
 
+    const handleUpdateStation = () => {
+        if (selectedStation !== null) {
+            axios.put(`http://localhost:8080/stations/${selectedStation.id}`, { name: newStationName, tags: newStationTags })
+                .then(response => {
+                    setStations(prevStations => prevStations.map(station => station.id === selectedStation.id ? response.data : station));
+                    setSelectedStation(null);
+                    setNewStationName('');
+                    setNewStationTags([]);
+                    setOpenEdit(false);
+                })
+                .catch(error => {
+                    console.error('There was an error updating the station!', error);
+                });
+        }
+    };
+
     const handleDeleteStation = () => {
-        if (selectedStationId !== null) {
-            axios.delete(`http://localhost:8080/stations/${selectedStationId}`)
+        if (selectedStation !== null) {
+            axios.delete(`http://localhost:8080/stations/${selectedStation.id}`)
                 .then(() => {
-                    setStations(prevStations => prevStations.filter(station => station.id !== selectedStationId));
-                    setSelectedStationId(null);
+                    setStations(prevStations => prevStations.filter(station => station.id !== selectedStation.id));
+                    setSelectedStation(null);
                     setOpenDelete(false);
                 })
                 .catch(error => {
@@ -66,8 +89,8 @@ const StationsPage: React.FC = () => {
         }
     };
 
-    const handleClickOpenDelete = (stationId: number) => {
-        setSelectedStationId(stationId);
+    const handleClickOpenDelete = (station: Station) => {
+        setSelectedStation(station);
         setOpenDelete(true);
     };
 
@@ -75,8 +98,15 @@ const StationsPage: React.FC = () => {
         setOpenAdd(true);
     };
 
+    const handleClickOpenEdit = (station: Station) => {
+        setSelectedStation(station);
+        setNewStationName(station.name);
+        setNewStationTags(station.tags);
+        setOpenEdit(true);
+    };
+
     const handleCloseDelete = () => {
-        setSelectedStationId(null);
+        setSelectedStation(null);
         setOpenDelete(false);
     };
 
@@ -84,6 +114,13 @@ const StationsPage: React.FC = () => {
         setNewStationName('');
         setNewStationTags([]);
         setOpenAdd(false);
+    };
+
+    const handleCloseEdit = () => {
+        setSelectedStation(null);
+        setNewStationName('');
+        setNewStationTags([]);
+        setOpenEdit(false);
     };
 
     return (
@@ -108,7 +145,12 @@ const StationsPage: React.FC = () => {
                             </CardContent>
                             <CardActions>
                                 <Button size="small" onClick={() => navigate(`/stations/${station.id}/songs`)}>View Songs</Button>
-                                <Button size="small" color="secondary" onClick={() => handleClickOpenDelete(station.id)}>Delete</Button>
+                                <IconButton color="primary" onClick={() => handleClickOpenEdit(station)}>
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton color="secondary" onClick={() => handleClickOpenDelete(station)}>
+                                    <DeleteIcon />
+                                </IconButton>
                             </CardActions>
                         </Card>
                     </Grid>
@@ -157,8 +199,8 @@ const StationsPage: React.FC = () => {
                             )}
                         >
                             {availableTags.map((tag) => (
-                                <MenuItem key={tag} value={tag}>
-                                    {tag}
+                                <MenuItem key={tag.id} value={tag.name}>
+                                    {tag.name}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -170,6 +212,49 @@ const StationsPage: React.FC = () => {
                     </Button>
                     <Button onClick={handleAddStation} color="primary">
                         Add
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={openEdit} onClose={handleCloseEdit}>
+                <DialogTitle>Edit Station</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="Station Name"
+                        value={newStationName}
+                        onChange={(e) => setNewStationName(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel id="tags-label">Tags</InputLabel>
+                        <Select
+                            labelId="tags-label"
+                            multiple
+                            value={newStationTags}
+                            onChange={(e) => setNewStationTags(e.target.value as string[])}
+                            input={<OutlinedInput id="select-multiple-chip" label="Tags" />}
+                            renderValue={(selected) => (
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value} />
+                                    ))}
+                                </Box>
+                            )}
+                        >
+                            {availableTags.map((tag) => (
+                                <MenuItem key={tag.id} value={tag.name}>
+                                    {tag.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseEdit} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleUpdateStation} color="primary">
+                        Save
                     </Button>
                 </DialogActions>
             </Dialog>
