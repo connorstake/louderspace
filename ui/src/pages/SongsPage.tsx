@@ -8,7 +8,7 @@ interface Song {
     title: string;
     artist: string;
     genre: string;
-    sunoApiId: string;
+    suno_id: string;
 }
 
 const SongsPage: React.FC = () => {
@@ -16,7 +16,7 @@ const SongsPage: React.FC = () => {
     const [currentSong, setCurrentSong] = useState<Song | null>(null);
     const { stationId } = useParams<{ stationId?: string }>();
     const location = useLocation();
-
+    console.log(process.env.REACT_APP_SUNO_API_TOKEN)
     useEffect(() => {
         const fetchSongs = async () => {
             try {
@@ -35,6 +35,7 @@ const SongsPage: React.FC = () => {
         fetchSongs();
     }, [stationId]);
 
+    // @ts-ignore
     return (
         <Container>
             <Typography variant="h4" component="h1" gutterBottom>
@@ -68,7 +69,7 @@ const SongsPage: React.FC = () => {
                         Now Playing: {currentSong.title} by {currentSong.artist}
                     </Typography>
                     <audio controls autoPlay>
-                        <source src={`https://cdn.sunoapi.com/${currentSong.sunoApiId}.mp3`} type="audio/mpeg" />
+                        <source src={`https://cdn1.suno.ai/${currentSong.suno_id}.mp3?apikey=${process.env.REACT_APP_SUNO_API_TOKEN}\``} type="audio/mpeg" />
                         Your browser does not support the audio element.
                     </audio>
                 </div>

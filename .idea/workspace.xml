@@ -5,24 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="small changes">
-      <change afterPath="$PROJECT_DIR$/ui/src/components/layout/Navbar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/components/layout/SideBar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/hooks/useUsers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/pages/DashboardPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/pages/SongsPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/pages/StationsPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/pages/UsersPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/routes.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/services/api.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/theme.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/songHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/songHandler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/userHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/userHandler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/repositories/songRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repositories/songRepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/repositories/userRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repositories/userRepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/services/songService.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/songService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/services/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/userService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose-restart.sh" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose-restart.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/sql/seed.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sql/seed.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/src/pages/SongsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/pages/SongsPage.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,42 +32,42 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="ujr3wdu8" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2iH2TW8Z5jUt5U6okUTgCwzMFu8" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "Go Test.go test louderspace/internal/api.executor": "Run",
-    "Go Test.go test louderspace/internal/services.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
-    "git-widget-placeholder": "main",
-    "go.import.settings.migrated": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "go.vgo",
-    "ts.external.directory.path": "/Users/connorpayne/Code/unorganized/louderspace/ui/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go Test.go test louderspace/internal/api.executor&quot;: &quot;Run&quot;,
+    &quot;Go Test.go test louderspace/internal/services.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;go.vgo&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/connorpayne/Code/unorganized/louderspace/ui/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -120,8 +107,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.15989.150" />
-        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-IU-241.15989.150" />
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
       </set>
     </attachedChunks>
   </component>
@@ -134,6 +121,8 @@
       <option name="presentableId" value="Default" />
       <updated>1719133189493</updated>
       <workItem from="1719133190502" duration="22875000" />
+      <workItem from="1719223622678" duration="291000" />
+      <workItem from="1719223985590" duration="2294000" />
     </task>
     <task id="LOCAL-00001" summary="User Service initialized">
       <option name="closed" value="true" />
