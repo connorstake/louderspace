@@ -51,7 +51,24 @@ func (r *TagDatabase) Update(tag *models.Tag) error {
 }
 
 func (r *TagDatabase) Delete(id int) error {
-	query := "DELETE FROM tags WHERE id = $1"
-	_, err := r.db.Exec(query, id)
-	return err
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	// Clean up related data in the song_tags table
+	_, err = tx.Exec("DELETE FROM song_tags WHERE tag_id = $1", id)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Delete the tag from the tags table
+	_, err = tx.Exec("DELETE FROM tags WHERE id = $1", id)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit()
 }

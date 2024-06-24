@@ -7,26 +7,24 @@ import (
 )
 
 type SongManagement interface {
-	CreateSong(title, artist, genre, sunoID string, isGenerated bool) (*models.Song, error)
+	CreateSong(title, artist, genre, sunoID string, isGenerated bool, tags []string) (*models.Song, error)
+	UpdateSong(id int, title, artist, genre, sunoID string, isGenerated bool, tags []string) (*models.Song, error)
 	GetSongByID(songID int) (*models.Song, error)
 	GetSongBySunoID(sunoID string) (*models.Song, error)
 	GetAllSongs() ([]*models.Song, error)
-	GetSongsByTags(tags []string) ([]*models.Song, error)
-	UpdateSong(id int, title, artist, genre, sunoID string, isGenerated bool) (*models.Song, error)
-	DeleteSong(songID int) error
 	GetSongsForStation(stationID int) ([]*models.Song, error)
+	DeleteSong(id int) error
 }
 
 type SongService struct {
-	songStorage    repositories.SongStorage
-	stationStorage repositories.StationStorage
+	songStorage repositories.SongStorage
 }
 
-func NewSongService(songStorage repositories.SongStorage, stationStorage repositories.StationStorage) SongManagement {
-	return &SongService{songStorage, stationStorage}
+func NewSongService(songStorage repositories.SongStorage) SongManagement {
+	return &SongService{songStorage}
 }
 
-func (s *SongService) CreateSong(title, artist, genre, sunoID string, isGenerated bool) (*models.Song, error) {
+func (s *SongService) CreateSong(title, artist, genre, sunoID string, isGenerated bool, tags []string) (*models.Song, error) {
 	song := &models.Song{
 		Title:       title,
 		Artist:      artist,
@@ -35,7 +33,22 @@ func (s *SongService) CreateSong(title, artist, genre, sunoID string, isGenerate
 		IsGenerated: isGenerated,
 		CreatedAt:   time.Now(),
 	}
-	if err := s.songStorage.Create(song); err != nil {
+	if err := s.songStorage.Create(song, tags); err != nil {
+		return nil, err
+	}
+	return song, nil
+}
+
+func (s *SongService) UpdateSong(id int, title, artist, genre, sunoID string, isGenerated bool, tags []string) (*models.Song, error) {
+	song := &models.Song{
+		ID:          id,
+		Title:       title,
+		Artist:      artist,
+		Genre:       genre,
+		SunoID:      sunoID,
+		IsGenerated: isGenerated,
+	}
+	if err := s.songStorage.Update(song, tags); err != nil {
 		return nil, err
 	}
 	return song, nil
@@ -53,37 +66,10 @@ func (s *SongService) GetAllSongs() ([]*models.Song, error) {
 	return s.songStorage.All()
 }
 
-func (s *SongService) GetSongsByTags(tags []string) ([]*models.Song, error) {
-	return s.songStorage.SongsByTags(tags)
-}
-
-func (s *SongService) UpdateSong(id int, title, artist, genre, sunoID string, isGenerated bool) (*models.Song, error) {
-	song, err := s.songStorage.ByID(id)
-	if err != nil {
-		return nil, err
-	}
-
-	song.Title = title
-	song.Artist = artist
-	song.Genre = genre
-	song.SunoID = sunoID
-	song.IsGenerated = isGenerated
-
-	if err := s.songStorage.Update(song); err != nil {
-		return nil, err
-	}
-	return song, nil
-}
-
-func (s *SongService) DeleteSong(songID int) error {
-	return s.songStorage.Delete(songID)
-}
-
 func (s *SongService) GetSongsForStation(stationID int) ([]*models.Song, error) {
-	station, err := s.stationStorage.ByID(stationID)
-	if err != nil {
-		return nil, err
-	}
+	return s.songStorage.ByStationID(stationID)
+}
 
-	return s.songStorage.SongsByTags(station.Tags)
+func (s *SongService) DeleteSong(id int) error {
+	return s.songStorage.Delete(id)
 }

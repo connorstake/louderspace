@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"louderspace/internal/services"
 	"net/http"
 	"strconv"
@@ -17,18 +18,19 @@ func NewSongAPI(songService services.SongManagement) *SongAPI {
 
 func (h *SongAPI) CreateSong(w http.ResponseWriter, r *http.Request) {
 	var req struct {
-		Title       string `json:"title"`
-		Artist      string `json:"artist"`
-		Genre       string `json:"genre"`
-		SunoID      string `json:"suno_id"`
-		IsGenerated bool   `json:"is_generated"`
+		Title       string   `json:"title"`
+		Artist      string   `json:"artist"`
+		Genre       string   `json:"genre"`
+		SunoID      string   `json:"suno_id"`
+		IsGenerated bool     `json:"is_generated"`
+		Tags        []string `json:"tags"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	song, err := h.songService.CreateSong(req.Title, req.Artist, req.Genre, req.SunoID, req.IsGenerated)
+	song, err := h.songService.CreateSong(req.Title, req.Artist, req.Genre, req.SunoID, req.IsGenerated, req.Tags)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -126,18 +128,19 @@ func (h *SongAPI) UpdateSong(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req struct {
-		Title       string `json:"title"`
-		Artist      string `json:"artist"`
-		Genre       string `json:"genre"`
-		SunoID      string `json:"suno_id"`
-		IsGenerated bool   `json:"is_generated"`
+		Title       string   `json:"title"`
+		Artist      string   `json:"artist"`
+		Genre       string   `json:"genre"`
+		SunoID      string   `json:"suno_id"`
+		IsGenerated bool     `json:"is_generated"`
+		Tags        []string `json:"tags"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	song, err := h.songService.UpdateSong(id, req.Title, req.Artist, req.Genre, req.SunoID, req.IsGenerated)
+	song, err := h.songService.UpdateSong(id, req.Title, req.Artist, req.Genre, req.SunoID, req.IsGenerated, req.Tags)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -148,7 +151,8 @@ func (h *SongAPI) UpdateSong(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *SongAPI) DeleteSong(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Query().Get("id")
+	vars := mux.Vars(r)
+	idStr := vars["id"]
 	if idStr == "" {
 		http.Error(w, "Missing song ID", http.StatusBadRequest)
 		return

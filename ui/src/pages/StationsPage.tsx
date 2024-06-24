@@ -236,7 +236,7 @@ const StationsPage: React.FC = () => {
                             renderValue={(selected) => (
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                     {selected.map((value) => (
-                                        <Chip key={value} label={value}/>
+                                        <Chip key={value} label={value} onDelete={() => setNewStationTags(prevTags => prevTags.filter(tag => tag !== value))}/>
                                     ))}
                                 </Box>
                             )}

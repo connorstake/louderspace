@@ -32,7 +32,7 @@ func main() {
 	userService := services.NewUserService(userStorage)
 	stationService := services.NewStationService(stationStorage)
 	playbackService := services.NewPlaybackService(stationStorage)
-	songService := services.NewSongService(songStorage, stationStorage)
+	songService := services.NewSongService(songStorage)
 	tagService := services.NewTagService(tagStorage)
 
 	userAPI := api.NewUserAPI(userService)
@@ -61,8 +61,8 @@ func main() {
 
 	r.HandleFunc("/songs", songAPI.CreateSong).Methods("POST")
 	r.HandleFunc("/songs", songAPI.GetAllSongs).Methods("GET")
-	r.HandleFunc("/songs", songAPI.UpdateSong).Methods("PUT")
-	r.HandleFunc("/songs", songAPI.DeleteSong).Methods("DELETE")
+	r.HandleFunc("/songs/{id:[0-9]+}", songAPI.DeleteSong).Methods("DELETE")
+	r.HandleFunc("/songs/{id:[0-9]+}", songAPI.UpdateSong).Methods("PUT")
 	r.HandleFunc("/songs/{id:[0-9]+}", songAPI.GetSong).Methods("GET")
 	r.HandleFunc("/songs/suno", songAPI.GetSongBySunoID).Methods("GET")
 
