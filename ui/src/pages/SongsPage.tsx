@@ -11,7 +11,7 @@ interface Song {
     artist: string;
     genre: string;
     suno_id: string;
-    tags: string[];  // Add tags to the Song interface
+    tags: Tag[];  // Add tags to the Song interface
 }
 
 interface Tag {
@@ -80,7 +80,7 @@ const SongsPage: React.FC = () => {
     const handleOpenEdit = (song: Song) => {
         setSelectedSong(song);
         setNewSong(song);
-        setNewSongTags(newSongTags);
+        setNewSongTags(song.tags ? song.tags.map(tag => tag.name) : []);
         setOpenEdit(true);
     };
 
@@ -134,10 +134,10 @@ const SongsPage: React.FC = () => {
         }
     };
 
-    const handleTagsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        const value = event.target.value as string[];
-        setNewSong({ ...newSong, tags: value });
-    };
+    // const handleTagsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    //     const value = event.target.value as string[];
+    //     setNewSong({ ...newSong, tags: value });
+    // };
 
     return (
         <Container>
@@ -154,7 +154,7 @@ const SongsPage: React.FC = () => {
                             <TableCell>Title</TableCell>
                             <TableCell>Artist</TableCell>
                             <TableCell>Genre</TableCell>
-                            {/*<TableCell>Tags</TableCell>*/}
+                            <TableCell>Tags</TableCell>
                             <TableCell>Action</TableCell>
                         </TableRow>
                     </TableHead>
@@ -164,7 +164,7 @@ const SongsPage: React.FC = () => {
                                 <TableCell>{song.title}</TableCell>
                                 <TableCell>{song.artist}</TableCell>
                                 <TableCell>{song.genre}</TableCell>
-                                {/*<TableCell>{song.tags.join(', ')}</TableCell>*/}
+                                <TableCell>{song.tags && song.tags.map((tag)=>tag.name).join(',')}</TableCell>
                                 <TableCell>
                                     <Button size="small" onClick={() => handlePlaySong(song)}>Play</Button>
                                     <Button size="small" color="primary" onClick={() => handleOpenEdit(song)}>Edit</Button>

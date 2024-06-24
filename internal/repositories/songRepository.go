@@ -13,6 +13,7 @@ type SongStorage interface {
 	All() ([]*models.Song, error)
 	ByStationID(stationID int) ([]*models.Song, error)
 	Delete(id int) error
+	GetTagsBySongID(songID int) ([]models.Tag, error)
 }
 
 type SongDatabase struct {
@@ -100,18 +101,49 @@ func (r *SongDatabase) BySunoID(sunoID string) (*models.Song, error) {
 }
 
 func (r *SongDatabase) All() ([]*models.Song, error) {
-	var songs []*models.Song
-	query := "SELECT id, title, artist, genre, suno_id, is_generated, created_at FROM songs"
+	query := `
+	SELECT s.id, s.title, s.artist, s.genre, s.suno_id, s.is_generated, s.created_at, t.id, t.name
+	FROM songs s
+	LEFT JOIN song_tags st ON s.id = st.song_id
+	LEFT JOIN tags t ON st.tag_id = t.id
+	`
+
 	rows, err := r.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
+	songMap := make(map[int]*models.Song)
+	tagMap := make(map[int]map[int]*models.Tag)
+
 	for rows.Next() {
-		song := &models.Song{}
-		if err := rows.Scan(&song.ID, &song.Title, &song.Artist, &song.Genre, &song.SunoID, &song.IsGenerated, &song.CreatedAt); err != nil {
+		var songID int
+		var tagID sql.NullInt64
+		var song models.Song
+		var tag models.Tag
+
+		err := rows.Scan(&song.ID, &song.Title, &song.Artist, &song.Genre, &song.SunoID, &song.IsGenerated, &song.CreatedAt, &tagID, &tag.Name)
+		if err != nil {
 			return nil, err
+		}
+
+		songID = song.ID
+		if _, exists := songMap[songID]; !exists {
+			songMap[songID] = &song
+			tagMap[songID] = make(map[int]*models.Tag)
+		}
+
+		if tagID.Valid {
+			tag.ID = int(tagID.Int64)
+			tagMap[songID][tag.ID] = &tag
+		}
+	}
+
+	var songs []*models.Song
+	for id, song := range songMap {
+		for _, tag := range tagMap[id] {
+			song.Tags = append(song.Tags, *tag)
 		}
 		songs = append(songs, song)
 	}
@@ -164,4 +196,28 @@ func (r *SongDatabase) Delete(id int) error {
 	}
 
 	return tx.Commit()
+}
+
+func (r *SongDatabase) GetTagsBySongID(songID int) ([]models.Tag, error) {
+	var tags []models.Tag
+	query := `
+		SELECT t.id, t.name
+		FROM tags t
+		JOIN song_tags st ON t.id = st.tag_id
+		WHERE st.song_id = $1
+	`
+	rows, err := r.db.Query(query, songID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var tag models.Tag
+		if err := rows.Scan(&tag.ID, &tag.Name); err != nil {
+			return nil, err
+		}
+		tags = append(tags, tag)
+	}
+	return tags, nil
 }

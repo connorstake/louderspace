@@ -1,6 +1,7 @@
 package services
 
 import (
+	"louderspace/internal/logger"
 	"louderspace/internal/models"
 	"louderspace/internal/repositories"
 	"time"
@@ -12,7 +13,7 @@ type SongManagement interface {
 	GetSongBySunoID(sunoID string) (*models.Song, error)
 	GetAllSongs() ([]*models.Song, error)
 	GetSongsForStation(stationID int) ([]*models.Song, error)
-	UpdateSong(song *models.Song, tags []string) error
+	UpdateSong(song *models.Song, tags []string) (*models.Song, error)
 	DeleteSong(id int) error
 }
 
@@ -34,17 +35,28 @@ func (s *SongService) CreateSong(title, artist, genre, sunoID string, isGenerate
 		CreatedAt:   time.Now(),
 	}
 	if err := s.songStorage.Create(song, tags); err != nil {
+		logger.Error("Failed to create song:", err)
 		return nil, err
 	}
 	return song, nil
 }
 
-func (s *SongService) UpdateSong(song *models.Song, tags []string) error {
+func (s *SongService) UpdateSong(song *models.Song, tags []string) (*models.Song, error) {
 
 	if err := s.songStorage.Update(song, tags); err != nil {
-		return err
+		logger.Error("Failed to update song:", err)
+		return nil, err
 	}
-	return nil
+
+	// Fetch updated tags
+	updatedTags, err := s.songStorage.GetTagsBySongID(song.ID)
+	if err != nil {
+		logger.Error("Failed to fetch updated tags:", err)
+		return nil, err
+	}
+
+	song.Tags = updatedTags
+	return song, nil
 }
 
 func (s *SongService) GetSongByID(songID int) (*models.Song, error) {

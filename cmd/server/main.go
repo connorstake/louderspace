@@ -8,12 +8,16 @@ import (
 	"log"
 	"louderspace/config"
 	"louderspace/internal/api"
+	"louderspace/internal/logger"
+	"louderspace/internal/middleware"
 	"louderspace/internal/repositories"
 	"louderspace/internal/services"
 	"net/http"
 )
 
 func main() {
+	logger.Init()
+
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalf("failed to load config: %v", err)
@@ -42,6 +46,9 @@ func main() {
 	tagAPI := api.NewTagAPI(tagService)
 
 	r := mux.NewRouter()
+
+	// Use logging middleware
+	r.Use(middleware.LoggingMiddleware)
 
 	r.HandleFunc("/register", userAPI.Register).Methods("POST")
 	r.HandleFunc("/login", userAPI.Login).Methods("POST")
