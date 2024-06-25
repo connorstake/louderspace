@@ -153,11 +153,14 @@ func (r *SongDatabase) All() ([]*models.Song, error) {
 
 func (r *SongDatabase) ByStationID(stationID int) ([]*models.Song, error) {
 	var songs []*models.Song
-	query := `SELECT s.id, s.title, s.artist, s.genre, s.suno_id, s.is_generated, s.created_at 
-			  FROM songs s 
-			  JOIN song_tags st ON s.id = st.song_id 
-			  JOIN stations_tags stt ON st.tag_id = stt.tag_id 
-			  WHERE stt.station_id = $1`
+	query := `
+		SELECT DISTINCT s.id, s.title, s.artist, s.genre, s.suno_id, s.is_generated, s.created_at
+		FROM songs s
+		JOIN song_tags st ON s.id = st.song_id
+		JOIN tags t ON st.tag_id = t.id
+		JOIN stations stn ON stn.tags LIKE '%' || t.name || '%'
+		WHERE stn.id = $1
+	`
 	rows, err := r.db.Query(query, stationID)
 	if err != nil {
 		return nil, err
@@ -169,6 +172,28 @@ func (r *SongDatabase) ByStationID(stationID int) ([]*models.Song, error) {
 		if err := rows.Scan(&song.ID, &song.Title, &song.Artist, &song.Genre, &song.SunoID, &song.IsGenerated, &song.CreatedAt); err != nil {
 			return nil, err
 		}
+
+		// Fetch tags for the song
+		tagsQuery := `
+			SELECT t.id, t.name
+			FROM tags t
+			JOIN song_tags st ON t.id = st.tag_id
+			WHERE st.song_id = $1
+		`
+		tagRows, err := r.db.Query(tagsQuery, song.ID)
+		if err != nil {
+			return nil, err
+		}
+		defer tagRows.Close()
+
+		for tagRows.Next() {
+			tag := models.Tag{}
+			if err := tagRows.Scan(&tag.ID, &tag.Name); err != nil {
+				return nil, err
+			}
+			song.Tags = append(song.Tags, tag)
+		}
+
 		songs = append(songs, song)
 	}
 

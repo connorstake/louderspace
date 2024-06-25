@@ -37,7 +37,7 @@ func main() {
 	feedbackStorage := repositories.NewFeedbackDatabase(db)
 
 	userService := services.NewUserService(userStorage)
-	stationService := services.NewStationService(stationStorage)
+	stationService := services.NewStationService(stationStorage, feedbackStorage, songStorage)
 	playbackService := services.NewPlaybackService(stationStorage)
 	songService := services.NewSongService(songStorage)
 	tagService := services.NewTagService(tagStorage)
@@ -66,6 +66,8 @@ func main() {
 	protected.Use(middleware.WithUser)
 
 	protected.HandleFunc("/feedback", feedbackAPI.SaveFeedback).Methods("POST")
+	protected.HandleFunc("/feedback", feedbackAPI.DeleteFeedback).Methods("DELETE")
+	protected.HandleFunc("/feedback", feedbackAPI.GetFeedback).Methods("GET")
 
 	protected.HandleFunc("/me", http.HandlerFunc(authAPI.Me)).Methods("GET")
 
