@@ -34,6 +34,7 @@ func main() {
 	stationStorage := repositories.NewStationDatabase(db)
 	tagStorage := repositories.NewTagDatabase(db)
 	playEventStorage := repositories.NewPlayEventDatabase(db)
+	feedbackStorage := repositories.NewFeedbackDatabase(db)
 
 	userService := services.NewUserService(userStorage)
 	stationService := services.NewStationService(stationStorage)
@@ -41,6 +42,7 @@ func main() {
 	songService := services.NewSongService(songStorage)
 	tagService := services.NewTagService(tagStorage)
 	playEventService := services.NewPlayEventService(playEventStorage)
+	feedbackService := services.NewFeedbackService(feedbackStorage)
 
 	userAPI := api.NewUserAPI(userService)
 	authAPI := api.NewAuthAPI(userService)
@@ -49,6 +51,7 @@ func main() {
 	songAPI := api.NewSongAPI(songService)
 	tagAPI := api.NewTagAPI(tagService)
 	playEventAPI := api.NewPlayEventAPI(playEventService)
+	feedbackAPI := api.NewFeedbackAPI(feedbackService)
 
 	r := mux.NewRouter()
 
@@ -61,6 +64,8 @@ func main() {
 
 	protected := r.PathPrefix("/").Subrouter()
 	protected.Use(middleware.WithUser)
+
+	protected.HandleFunc("/feedback", feedbackAPI.SaveFeedback).Methods("POST")
 
 	protected.HandleFunc("/me", http.HandlerFunc(authAPI.Me)).Methods("GET")
 

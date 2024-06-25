@@ -53,7 +53,6 @@ func (a *AuthAPI) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *AuthAPI) Login(w http.ResponseWriter, r *http.Request) {
-
 	var req struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
@@ -93,7 +92,10 @@ func (a *AuthAPI) Login(w http.ResponseWriter, r *http.Request) {
 
 	logger.Info("User logged in", user)
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"token": token})
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"token": token,
+		"user":  user,
+	})
 }
 
 func (a *AuthAPI) Me(w http.ResponseWriter, r *http.Request) {

@@ -13,7 +13,7 @@ func TestRegister(t *testing.T) {
 	userStorage := repositories.NewMockUserStorage()
 	userService := NewUserService(userStorage)
 
-	user, err := userService.Register("testuser", "password123", "test@example.com")
+	user, err := userService.Register("testuser", "password123", "test@example.com", "free")
 
 	assert.NoError(t, err)
 	assert.NotNil(t, user)
@@ -27,12 +27,15 @@ func TestLogin(t *testing.T) {
 	userService := NewUserService(userStorage)
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("password123"), bcrypt.DefaultCost)
-	userStorage.Save(&models.User{
+	err := userStorage.Save(&models.User{
 		Username:  "testuser",
 		Password:  string(hashedPassword),
 		Email:     "test@example.com",
 		CreatedAt: time.Now(),
 	})
+	if err != nil {
+		return
+	}
 
 	user, err := userService.Login("testuser", "password123")
 
@@ -52,7 +55,10 @@ func TestUser(t *testing.T) {
 		Email:     "test@example.com",
 		CreatedAt: time.Now(),
 	}
-	userStorage.Save(savedUser)
+	err := userStorage.Save(savedUser)
+	if err != nil {
+		return
+	}
 
 	user, err := userService.User(savedUser.ID)
 

@@ -4,9 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="clean up warnings">
+    <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="add feedback">
+      <change afterPath="$PROJECT_DIR$/internal/api/feedbackHandler.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/models/feedback.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/repositories/feedbackRepository.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/repositories/feedbackRepositoryMock.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/feedbackService.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/feedbackService_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/stationHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/stationHandler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/services/userService_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/userService_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +24,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript JSX File" />
-        <option value="Go File" />
         <option value="TypeScript File" />
+        <option value="Go File" />
       </list>
     </option>
   </component>
@@ -26,17 +33,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "connorstake"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;connorstake&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/connorstake/louderspace.git",
-    "accountId": "627bbf2c-5a89-47bb-9834-e83f1672ecbe"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/connorstake/louderspace.git&quot;,
+    &quot;accountId&quot;: &quot;627bbf2c-5a89-47bb-9834-e83f1672ecbe&quot;
   }
+}</component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
 }]]></component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="ujr3wdu8" />
@@ -63,7 +74,8 @@
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
-    "git-widget-placeholder": "play__metrics",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "add__feedback",
     "go.import.settings.migrated": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -72,6 +84,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "go.vgo",
+    "show.migrate.to.gradle.popup": "false",
     "ts.external.directory.path": "/Users/connorpayne/Code/unorganized/louderspace/ui/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   },
@@ -83,6 +96,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal/repositories" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/cmd/server" />
     </key>
@@ -176,6 +190,7 @@
       <workItem from="1719133190502" duration="22875000" />
       <workItem from="1719223622678" duration="291000" />
       <workItem from="1719223985590" duration="12858000" />
+      <workItem from="1719303090491" duration="14819000" />
     </task>
     <task id="LOCAL-00001" summary="User Service initialized">
       <option name="closed" value="true" />
@@ -345,7 +360,23 @@
       <option name="project" value="LOCAL" />
       <updated>1719302040619</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="clean up warnings">
+      <option name="closed" value="true" />
+      <created>1719302088060</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1719302088060</updated>
+    </task>
+    <task id="LOCAL-00023" summary="clean up warnings">
+      <option name="closed" value="true" />
+      <created>1719342902309</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1719342902309</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -371,7 +402,8 @@
     <MESSAGE value="fix backedn auth" />
     <MESSAGE value="clean up ui" />
     <MESSAGE value="clean up warnings" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean up warnings" />
+    <MESSAGE value="add feedback" />
+    <option name="LAST_COMMIT_MESSAGE" value="add feedback" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
