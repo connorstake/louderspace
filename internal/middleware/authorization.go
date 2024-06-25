@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"louderspace/internal/logger"
 	"net/http"
 	"strings"
 
@@ -19,6 +20,7 @@ func WithUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
+			logger.Error("No Authorization header")
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
@@ -26,6 +28,7 @@ func WithUser(next http.Handler) http.Handler {
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 		claims, err := utils.ParseToken(tokenString)
 		if err != nil {
+			logger.Error("Failed to parse token", err)
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
@@ -44,6 +47,7 @@ func RequireRole(role models.Role) func(http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			user, ok := r.Context().Value(UserContextKey).(*models.User)
 			if !ok || user.Role != role {
+				logger.Error("Forbidden")
 				http.Error(w, "Forbidden", http.StatusForbidden)
 				return
 			}

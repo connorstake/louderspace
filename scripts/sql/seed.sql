@@ -1,8 +1,8 @@
 -- Insert initial users
-INSERT INTO users (username, password, email)
+INSERT INTO users (username, password, email, role)
 VALUES
-    ('user1', 'password1', 'user1@example.com'),
-    ('user2', 'password2', 'user2@example.com');
+    ('user1', 'password1', 'user1@example.com', 'admin'),
+    ('user2', 'password2', 'user2@example.com', 'free');
 
 -- Insert new tags
 INSERT INTO tags (name)

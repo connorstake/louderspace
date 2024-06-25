@@ -37,7 +37,7 @@ const StationsPage: React.FC = () => {
             });
 
         // Fetch available tags from the backend
-        axios.get<Tag[]>('http://localhost:8080/tags')
+        axios.get<Tag[]>('http://localhost:8080/admin/tags')
             .then(response => {
                 setAvailableTags(response.data);
             })
@@ -61,7 +61,7 @@ const StationsPage: React.FC = () => {
 
     const handleUpdateStation = () => {
         if (selectedStation !== null) {
-            axios.put(`http://localhost:8080/stations/${selectedStation.id}`, { name: newStationName, tags: newStationTags })
+            axios.put(`http://localhost:8080/admin/stations/${selectedStation.id}`, { name: newStationName, tags: newStationTags })
                 .then(response => {
                     setStations(prevStations => prevStations.map(station => station.id === selectedStation.id ? response.data : station));
                     setSelectedStation(null);
@@ -77,7 +77,7 @@ const StationsPage: React.FC = () => {
 
     const handleDeleteStation = () => {
         if (selectedStation !== null) {
-            axios.delete(`http://localhost:8080/stations/${selectedStation.id}`)
+            axios.delete(`http://localhost:8080/admin/stations/${selectedStation.id}`)
                 .then(() => {
                     setStations(prevStations => prevStations.filter(station => station.id !== selectedStation.id));
                     setSelectedStation(null);

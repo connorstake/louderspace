@@ -1,6 +1,6 @@
 // src/hooks/useUsers.ts
 import { useEffect, useState } from 'react';
-import { getUsers } from '../services/api';
+import { getUsers } from '../services/userApi';
 
 const useUsers = () => {
     const [users, setUsers] = useState([]);

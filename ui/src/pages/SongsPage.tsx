@@ -40,7 +40,7 @@ const SongsPage: React.FC = () => {
                 if (stationId) {
                     response = await axios.get<Song[]>(`http://localhost:8080/stations/${stationId}/songs`);
                 } else {
-                    response = await axios.get<Song[]>('http://localhost:8080/songs');
+                    response = await axios.get<Song[]>('http://localhost:8080/admin/songs');
                 }
                 console.log('Fetched songs:', response.data);
                 setSongs(response.data);
@@ -104,7 +104,7 @@ const SongsPage: React.FC = () => {
 
     const handleAddSong = async () => {
         try {
-            const response = await axios.post<Song>('http://localhost:8080/songs', {...newSong, tags: newSongTags});
+            const response = await axios.post<Song>('http://localhost:8080/admin/songs', {...newSong, tags: newSongTags});
             setSongs([...songs, response.data]);
             setNewSongTags([]);
             handleCloseAdd();
@@ -115,7 +115,7 @@ const SongsPage: React.FC = () => {
 
     const handleEditSong = async () => {
         try {
-            const response = await axios.put<Song>(`http://localhost:8080/songs/${selectedSong?.id}`, {...newSong, tags: newSongTags});
+            const response = await axios.put<Song>(`http://localhost:8080/admin/songs/${selectedSong?.id}`, {...newSong, tags: newSongTags});
             setSongs(songs.map(song => song.id === response.data.id ? response.data : song));
             setNewSongTags([]);
             handleCloseEdit();
@@ -126,7 +126,7 @@ const SongsPage: React.FC = () => {
 
     const handleDeleteSong = async () => {
         try {
-            await axios.delete(`http://localhost:8080/songs/${selectedSong?.id}`);
+            await axios.delete(`http://localhost:8080/admin/songs/${selectedSong?.id}`);
             setSongs(songs.filter(song => song.id !== selectedSong?.id));
             handleCloseDelete();
         } catch (error) {

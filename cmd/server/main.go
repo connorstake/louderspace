@@ -54,22 +54,27 @@ func main() {
 
 	// Use logging middleware
 	r.Use(middleware.LoggingMiddleware)
-	r.Use(middleware.WithUser)
 
+	// Public routes
 	r.HandleFunc("/register", authAPI.Register).Methods("POST")
 	r.HandleFunc("/login", authAPI.Login).Methods("POST")
 
-	r.HandleFunc("/stations", stationAPI.CreateStation).Methods("POST")
-	r.HandleFunc("/stations", stationAPI.GetAllStations).Methods("GET")
+	protected := r.PathPrefix("/").Subrouter()
+	protected.Use(middleware.WithUser)
 
-	r.HandleFunc("/playback/play", playbackAPI.Play).Methods("POST")
-	r.HandleFunc("/playback/pause", playbackAPI.Pause).Methods("POST")
-	r.HandleFunc("/playback/skip", playbackAPI.Skip).Methods("POST")
-	r.HandleFunc("/playback/rewind", playbackAPI.Rewind).Methods("POST")
-	r.HandleFunc("/playback/state", playbackAPI.GetPlaybackState).Methods("GET")
+	protected.HandleFunc("/me", http.HandlerFunc(authAPI.Me)).Methods("GET")
 
-	r.HandleFunc("/songs", songAPI.CreateSong).Methods("POST")
-	r.HandleFunc("/songs", songAPI.GetAllSongs).Methods("GET")
+	protected.HandleFunc("/stations", stationAPI.CreateStation).Methods("POST")
+	protected.HandleFunc("/stations", stationAPI.GetAllStations).Methods("GET")
+
+	protected.HandleFunc("/playback/play", playbackAPI.Play).Methods("POST")
+	protected.HandleFunc("/playback/pause", playbackAPI.Pause).Methods("POST")
+	protected.HandleFunc("/playback/skip", playbackAPI.Skip).Methods("POST")
+	protected.HandleFunc("/playback/rewind", playbackAPI.Rewind).Methods("POST")
+	protected.HandleFunc("/playback/state", playbackAPI.GetPlaybackState).Methods("GET")
+
+	protected.HandleFunc("/songs", songAPI.CreateSong).Methods("POST")
+	protected.HandleFunc("/songs", songAPI.GetAllSongs).Methods("GET")
 
 	adminRouter := r.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(middleware.RequireRole(models.RoleAdmin))

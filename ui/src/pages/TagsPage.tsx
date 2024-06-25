@@ -23,7 +23,7 @@ const TagsPage: React.FC = () => {
 
     useEffect(() => {
         // Fetch tags from the backend
-        axios.get<Tag[]>('http://localhost:8080/tags')
+        axios.get<Tag[]>('http://localhost:/admin8080/tags')
             .then(response => {
                 setTags(response.data);
             })
@@ -33,7 +33,7 @@ const TagsPage: React.FC = () => {
     }, []);
 
     const handleAddTag = () => {
-        axios.post('http://localhost:8080/tags', { name: newTagName })
+        axios.post('http://localhost:8080/admin/tags', { name: newTagName })
             .then(response => {
                 setTags(prevTags => [...prevTags, response.data]);
                 setNewTagName('');
@@ -46,7 +46,7 @@ const TagsPage: React.FC = () => {
 
     const handleEditTag = () => {
         if (selectedTag) {
-            axios.put(`http://localhost:8080/tags/${selectedTag.id}`, { name: newTagName })
+            axios.put(`http://localhost:8080/admin/tags/${selectedTag.id}`, { name: newTagName })
                 .then(() => {
                     setTags(prevTags => prevTags.map(tag => tag.id === selectedTag.id ? { ...tag, name: newTagName } : tag));
                     setSelectedTag(null);
@@ -61,7 +61,7 @@ const TagsPage: React.FC = () => {
 
     const handleDeleteTag = () => {
         if (selectedTag) {
-            axios.delete(`http://localhost:8080/tags/${selectedTag.id}`)
+            axios.delete(`http://localhost:8080/admin/tags/${selectedTag.id}`)
                 .then(() => {
                     setTags(prevTags => prevTags.filter(tag => tag.id !== selectedTag.id));
                     setSelectedTag(null);
