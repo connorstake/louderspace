@@ -45,7 +45,8 @@ func (h *StationAPI) CreateStation(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *StationAPI) GetAllStations(w http.ResponseWriter, r *http.Request) {
+func (h *StationAPI) GetAllStations(w http.ResponseWriter, _ *http.Request) {
+
 	stations, err := h.stationService.GetAllStations()
 	if err != nil {
 		logger.Error("Failed to get all stations:", err)
