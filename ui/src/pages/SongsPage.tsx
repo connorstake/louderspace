@@ -1,9 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import {
-    Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel, OutlinedInput, Box, Chip
-} from '@mui/material';
-import axios from 'axios';
+import React, { useState, useRef } from 'react';
+import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel, OutlinedInput, Box, Chip } from '@mui/material';
+import useSongs from '../hooks/useSongs';
 
 interface Song {
     id: number;
@@ -20,47 +17,15 @@ interface Tag {
 }
 
 const SongsPage: React.FC = () => {
-    const [songs, setSongs] = useState<Song[]>([]);
+    const { songs, tags: availableTags, loading, error, addSong, updateExistingSong, removeSong } = useSongs();
     const [currentSong, setCurrentSong] = useState<Song | null>(null);
     const [openAdd, setOpenAdd] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const [newSong, setNewSong] = useState<Song>({ id: 0, title: '', artist: '', genre: '', suno_id: '', tags: [] });
     const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-    const [availableTags, setAvailableTags] = useState<Tag[]>([]);
     const audioRef = useRef<HTMLAudioElement>(null);
     const [newSongTags, setNewSongTags] = useState<string[]>([]);
-
-    const { stationId } = useParams<{ stationId?: string }>();
-
-    useEffect(() => {
-        const fetchSongs = async () => {
-            try {
-                let response;
-                if (stationId) {
-                    response = await axios.get<Song[]>(`http://localhost:8080/stations/${stationId}/songs`);
-                } else {
-                    response = await axios.get<Song[]>('http://localhost:8080/admin/songs');
-                }
-                console.log('Fetched songs:', response.data);
-                setSongs(response.data);
-            } catch (error) {
-                console.error('There was an error fetching the songs!', error);
-            }
-        };
-
-        const fetchTags = async () => {
-            try {
-                const response = await axios.get<Tag[]>('http://localhost:8080/tags');
-                setAvailableTags(response.data);
-            } catch (error) {
-                console.error('There was an error fetching the tags!', error);
-            }
-        };
-
-        fetchSongs();
-        fetchTags();
-    }, [stationId]);
 
     const handlePlaySong = (song: Song) => {
         console.log('Playing song:', song);
@@ -103,78 +68,68 @@ const SongsPage: React.FC = () => {
     };
 
     const handleAddSong = async () => {
-        try {
-            const response = await axios.post<Song>('http://localhost:8080/admin/songs', {...newSong, tags: newSongTags});
-            setSongs([...songs, response.data]);
-            setNewSongTags([]);
-            handleCloseAdd();
-        } catch (error) {
-            console.error('There was an error adding the song!', error);
-        }
+        await addSong({ ...newSong, tags: newSongTags });
+        setNewSongTags([]);
+        handleCloseAdd();
     };
 
     const handleEditSong = async () => {
-        try {
-            const response = await axios.put<Song>(`http://localhost:8080/admin/songs/${selectedSong?.id}`, {...newSong, tags: newSongTags});
-            setSongs(songs.map(song => song.id === response.data.id ? response.data : song));
+        if (selectedSong !== null) {
+            await updateExistingSong(selectedSong.id, { ...newSong, tags: newSongTags });
             setNewSongTags([]);
             handleCloseEdit();
-        } catch (error) {
-            console.error('There was an error editing the song!', error);
         }
     };
 
     const handleDeleteSong = async () => {
-        try {
-            await axios.delete(`http://localhost:8080/admin/songs/${selectedSong?.id}`);
-            setSongs(songs.filter(song => song.id !== selectedSong?.id));
+        if (selectedSong !== null) {
+            await removeSong(selectedSong.id);
             handleCloseDelete();
-        } catch (error) {
-            console.error('There was an error deleting the song!', error);
         }
     };
-
-    // const handleTagsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    //     const value = event.target.value as string[];
-    //     setNewSong({ ...newSong, tags: value });
-    // };
 
     return (
         <Container>
             <Typography variant="h4" component="h1" gutterBottom>
-                {stationId ? 'Songs for Station' : 'All Songs'}
+                Songs
             </Typography>
             <Button variant="contained" color="primary" onClick={handleOpenAdd} sx={{ mb: 4 }}>
                 Add Song
             </Button>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Title</TableCell>
-                            <TableCell>Artist</TableCell>
-                            <TableCell>Genre</TableCell>
-                            <TableCell>Tags</TableCell>
-                            <TableCell>Action</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {songs.map((song) => (
-                            <TableRow key={song.id}>
-                                <TableCell>{song.title}</TableCell>
-                                <TableCell>{song.artist}</TableCell>
-                                <TableCell>{song.genre}</TableCell>
-                                <TableCell>{song.tags && song.tags.map((tag)=>tag.name).join(',')}</TableCell>
-                                <TableCell>
-                                    <Button size="small" onClick={() => handlePlaySong(song)}>Play</Button>
-                                    <Button size="small" color="primary" onClick={() => handleOpenEdit(song)}>Edit</Button>
-                                    <Button size="small" color="secondary" onClick={() => handleOpenDelete(song)}>Delete</Button>
-                                </TableCell>
+            {loading ? (
+                <Typography>Loading...</Typography>
+            ) : error ? (
+                <Typography color="error">{error}</Typography>
+            ) : (
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Title</TableCell>
+                                <TableCell>Artist</TableCell>
+                                <TableCell>Genre</TableCell>
+                                <TableCell>Tags</TableCell>
+                                <TableCell>Action</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {songs.map((song) => (
+                                <TableRow key={song.id}>
+                                    <TableCell>{song.title}</TableCell>
+                                    <TableCell>{song.artist}</TableCell>
+                                    <TableCell>{song.genre}</TableCell>
+                                    <TableCell>{song.tags && song.tags.map((tag)=>tag.name).join(',')}</TableCell>
+                                    <TableCell>
+                                        <Button size="small" onClick={() => handlePlaySong(song)}>Play</Button>
+                                        <Button size="small" color="primary" onClick={() => handleOpenEdit(song)}>Edit</Button>
+                                        <Button size="small" color="secondary" onClick={() => handleOpenDelete(song)}>Delete</Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )}
             {currentSong && (
                 <div style={{ marginTop: '20px' }}>
                     <Typography variant="h5" component="div">

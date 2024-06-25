@@ -64,8 +64,8 @@ func main() {
 
 	protected.HandleFunc("/me", http.HandlerFunc(authAPI.Me)).Methods("GET")
 
-	protected.HandleFunc("/stations", stationAPI.CreateStation).Methods("POST")
 	protected.HandleFunc("/stations", stationAPI.GetAllStations).Methods("GET")
+	protected.HandleFunc("/stations/{id:[0-9]+}/songs", stationAPI.GetSongsForStationByID).Methods("GET")
 
 	protected.HandleFunc("/playback/play", playbackAPI.Play).Methods("POST")
 	protected.HandleFunc("/playback/pause", playbackAPI.Pause).Methods("POST")
@@ -73,7 +73,6 @@ func main() {
 	protected.HandleFunc("/playback/rewind", playbackAPI.Rewind).Methods("POST")
 	protected.HandleFunc("/playback/state", playbackAPI.GetPlaybackState).Methods("GET")
 
-	protected.HandleFunc("/songs", songAPI.CreateSong).Methods("POST")
 	protected.HandleFunc("/songs", songAPI.GetAllSongs).Methods("GET")
 
 	adminRouter := protected.PathPrefix("/admin").Subrouter()
@@ -89,13 +88,14 @@ func main() {
 	adminRouter.HandleFunc("/tags/{id:[0-9]+}", tagAPI.UpdateTag).Methods("PUT")
 	adminRouter.HandleFunc("/tags/{id:[0-9]+}", tagAPI.DeleteTag).Methods("DELETE")
 
+	adminRouter.HandleFunc("/songs", songAPI.CreateSong).Methods("POST")
 	adminRouter.HandleFunc("/songs/{id:[0-9]+}", songAPI.DeleteSong).Methods("DELETE")
 	adminRouter.HandleFunc("/songs/{id:[0-9]+}", songAPI.UpdateSong).Methods("PUT")
 	adminRouter.HandleFunc("/songs/{id:[0-9]+}", songAPI.GetSong).Methods("GET")
 	adminRouter.HandleFunc("/songs/suno", songAPI.GetSongBySunoID).Methods("GET")
 
+	adminRouter.HandleFunc("/stations", stationAPI.CreateStation).Methods("POST")
 	adminRouter.HandleFunc("/stations/{id:[0-9]+}", stationAPI.UpdateStation).Methods("PUT")
-	adminRouter.HandleFunc("/stations/{id:[0-9]+}/songs", stationAPI.GetSongsForStationByID).Methods("GET")
 	adminRouter.HandleFunc("/stations/{id:[0-9]+}", stationAPI.DeleteStation).Methods("DELETE")
 
 	corsMiddleware := handlers.CORS(

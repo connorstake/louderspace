@@ -1,75 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-    Container, Typography, Box, Button, TextField, Dialog, DialogActions, DialogContent,
+    Container, Typography, Button, TextField, Dialog, DialogActions, DialogContent,
     DialogContentText, DialogTitle, Table, TableBody, TableCell, TableContainer, TableHead,
     TableRow, Paper, IconButton
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import axios from 'axios';
-
-export interface Tag {
-    id: number;
-    name: string;
-}
+import useTags, { Tag } from '../hooks/useTags';
 
 const TagsPage: React.FC = () => {
-    const [tags, setTags] = useState<Tag[]>([]);
+    const { tags, loading, error, addTag, updateExistingTag, removeTag } = useTags();
     const [newTagName, setNewTagName] = useState<string>('');
     const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
     const [openAdd, setOpenAdd] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
-    useEffect(() => {
-        // Fetch tags from the backend
-        axios.get<Tag[]>('http://localhost:/admin8080/tags')
-            .then(response => {
-                setTags(response.data);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the tags!', error);
-            });
-    }, []);
-
-    const handleAddTag = () => {
-        axios.post('http://localhost:8080/admin/tags', { name: newTagName })
-            .then(response => {
-                setTags(prevTags => [...prevTags, response.data]);
-                setNewTagName('');
-                setOpenAdd(false);
-            })
-            .catch(error => {
-                console.error('There was an error adding the tag!', error);
-            });
+    const handleAddTag = async () => {
+        await addTag({ name: newTagName });
+        setNewTagName('');
+        setOpenAdd(false);
     };
 
-    const handleEditTag = () => {
+    const handleEditTag = async () => {
         if (selectedTag) {
-            axios.put(`http://localhost:8080/admin/tags/${selectedTag.id}`, { name: newTagName })
-                .then(() => {
-                    setTags(prevTags => prevTags.map(tag => tag.id === selectedTag.id ? { ...tag, name: newTagName } : tag));
-                    setSelectedTag(null);
-                    setNewTagName('');
-                    setOpenEdit(false);
-                })
-                .catch(error => {
-                    console.error('There was an error updating the tag!', error);
-                });
+            await updateExistingTag(selectedTag.id, { name: newTagName });
+            setSelectedTag(null);
+            setNewTagName('');
+            setOpenEdit(false);
         }
     };
 
-    const handleDeleteTag = () => {
+    const handleDeleteTag = async () => {
         if (selectedTag) {
-            axios.delete(`http://localhost:8080/admin/tags/${selectedTag.id}`)
-                .then(() => {
-                    setTags(prevTags => prevTags.filter(tag => tag.id !== selectedTag.id));
-                    setSelectedTag(null);
-                    setOpenDelete(false);
-                })
-                .catch(error => {
-                    console.error('There was an error deleting the tag!', error);
-                });
+            await removeTag(selectedTag.id);
+            setSelectedTag(null);
+            setOpenDelete(false);
         }
     };
 
@@ -112,31 +78,37 @@ const TagsPage: React.FC = () => {
             <Button variant="contained" color="primary" onClick={handleClickOpenAdd} sx={{ mb: 4 }}>
                 Add Tag
             </Button>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell align="right">Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {tags.map((tag) => (
-                            <TableRow key={tag.id}>
-                                <TableCell>{tag.name}</TableCell>
-                                <TableCell align="right">
-                                    <IconButton color="primary" onClick={() => handleClickOpenEdit(tag)}>
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton color="secondary" onClick={() => handleClickOpenDelete(tag)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </TableCell>
+            {loading ? (
+                <Typography>Loading...</Typography>
+            ) : error ? (
+                <Typography color="error">{error}</Typography>
+            ) : (
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Name</TableCell>
+                                <TableCell align="right">Actions</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {tags.map((tag) => (
+                                <TableRow key={tag.id}>
+                                    <TableCell>{tag.name}</TableCell>
+                                    <TableCell align="right">
+                                        <IconButton color="primary" onClick={() => handleClickOpenEdit(tag)}>
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton color="secondary" onClick={() => handleClickOpenDelete(tag)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )}
             <Dialog open={openAdd} onClose={handleCloseAdd}>
                 <DialogTitle>Add Tag</DialogTitle>
                 <DialogContent>
