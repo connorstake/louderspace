@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS users (
                                      username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    role VARCHAR(50) NOT NULL DEFAULT 'free'
     );
 
 CREATE TABLE IF NOT EXISTS songs (
@@ -53,3 +54,26 @@ CREATE TABLE IF NOT EXISTS stations (
                                         name VARCHAR(100) NOT NULL,
     tags TEXT NOT NULL -- storing tags as a comma-separated string
     );
+
+CREATE TABLE plays (
+                       id SERIAL PRIMARY KEY,
+                       user_id INT REFERENCES users(id),
+                       song_id INT REFERENCES songs(id),
+                       action VARCHAR(50) NOT NULL, -- e.g., start, pause, stop
+                       timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE play_aggregates (
+                                 song_id INT REFERENCES songs(id),
+                                 user_id INT REFERENCES users(id),
+                                 total_plays INT DEFAULT 0,
+                                 total_duration INT DEFAULT 0, -- duration in seconds
+                                 PRIMARY KEY (song_id, user_id)
+);
+
+CREATE TABLE song_play_aggregates (
+                                      song_id INT REFERENCES songs(id),
+                                      total_plays INT DEFAULT 0,
+                                      total_duration INT DEFAULT 0, -- duration in seconds
+                                      PRIMARY KEY (song_id)
+);

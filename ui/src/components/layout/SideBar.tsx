@@ -6,24 +6,24 @@ const SideBar: React.FC = () => {
     return (
         <div style={{ width: '250px', height: '100vh', backgroundColor: '#f0f0f0', padding: '1rem' }}>
             <List>
-                <ListItem button component={Link} to="/">
+                <ListItem component={Link} to="/">
                     <ListItemText primary="Dashboard" />
                 </ListItem>
-                <ListItem button component={Link} to="/users">
+                <ListItem  component={Link} to="/users">
                     <ListItemText primary="Users" />
                 </ListItem>
-                <ListItem button component={Link} to="/stations">
+                <ListItem  component={Link} to="/stations">
                     <ListItemText primary="Stations" />
                 </ListItem>
-                <ListItem button component={Link} to="/songs">
+                <ListItem  component={Link} to="/songs">
                     <ListItemText primary="Songs" />
                 </ListItem>
-                <ListItem button component={Link} to="/tags">
+                <ListItem  component={Link} to="/tags">
                     <ListItemText primary="Tags" />
                 </ListItem>
-                <ListItem button component={Link} to="/settings">
-                    <ListItemText primary="Settings" />
-                </ListItem>
+                {/*<ListItem button component={Link} to="/settings">*/}
+                {/*    <ListItemText primary="Settings" />*/}
+                {/*</ListItem>*/}
                 {/* Add more links as needed */}
             </List>
         </div>

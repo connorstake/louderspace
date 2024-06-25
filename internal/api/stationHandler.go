@@ -37,10 +37,16 @@ func (h *StationAPI) CreateStation(w http.ResponseWriter, r *http.Request) {
 
 	logger.Info("Created station:", station)
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(station)
+	err = json.NewEncoder(w).Encode(station)
+	if err != nil {
+		logger.Error("Failed to encode response:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
-func (h *StationAPI) GetAllStations(w http.ResponseWriter, r *http.Request) {
+func (h *StationAPI) GetAllStations(w http.ResponseWriter, _ *http.Request) {
+
 	stations, err := h.stationService.GetAllStations()
 	if err != nil {
 		logger.Error("Failed to get all stations:", err)
@@ -49,7 +55,13 @@ func (h *StationAPI) GetAllStations(w http.ResponseWriter, r *http.Request) {
 	}
 	logger.Info("Got all stations:", stations)
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(stations)
+	err = json.NewEncoder(w).Encode(stations)
+	if err != nil {
+		logger.Error("Failed to encode response:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 }
 
 func (h *StationAPI) GetSongsForStationByID(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +80,12 @@ func (h *StationAPI) GetSongsForStationByID(w http.ResponseWriter, r *http.Reque
 	}
 	logger.Info("Got songs for station:", songs)
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(songs)
+	err = json.NewEncoder(w).Encode(songs)
+	if err != nil {
+		logger.Error("Failed to encode response:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func (h *StationAPI) DeleteStation(w http.ResponseWriter, r *http.Request) {
@@ -96,7 +113,7 @@ func (h *StationAPI) UpdateStation(w http.ResponseWriter, r *http.Request) {
 		Name string   `json:"name"`
 		Tags []string `json:"tags"`
 	}
-	stationID, err := strconv.Atoi(r.URL.Path[len("/stations/"):])
+	stationID, err := strconv.Atoi(r.URL.Path[len("/admin/stations/"):])
 	if err != nil {
 		logger.Error("Invalid station ID:", err)
 		http.Error(w, "Invalid station ID", http.StatusBadRequest)
@@ -118,5 +135,10 @@ func (h *StationAPI) UpdateStation(w http.ResponseWriter, r *http.Request) {
 
 	logger.Info("Updated station:", station)
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(station)
+	err = json.NewEncoder(w).Encode(station)
+	if err != nil {
+		logger.Error("Failed to encode response:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

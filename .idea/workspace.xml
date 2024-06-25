@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="logging">
-      <change afterPath="$PROJECT_DIR$/internal/repositories/songRepositoryMock.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/repositories/tagsRepositoryMock.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/services/songService_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/services/tagsService_test.go" afterDir="false" />
+    <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="clean up warnings">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/repositories/userRepositoryMock.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repositories/userRepositoryMock.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/services/songService.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/songService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/stationHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/stationHandler.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,9 +16,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
         <option value="Go File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -68,7 +63,7 @@
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "play__metrics",
     "go.import.settings.migrated": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -310,7 +305,47 @@
       <option name="project" value="LOCAL" />
       <updated>1719264846267</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="add tests">
+      <option name="closed" value="true" />
+      <created>1719266222997</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1719266222997</updated>
+    </task>
+    <task id="LOCAL-00018" summary="add auth">
+      <option name="closed" value="true" />
+      <created>1719268095260</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1719268095260</updated>
+    </task>
+    <task id="LOCAL-00019" summary="add auth">
+      <option name="closed" value="true" />
+      <created>1719299415651</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1719299415651</updated>
+    </task>
+    <task id="LOCAL-00020" summary="fix backedn auth">
+      <option name="closed" value="true" />
+      <created>1719300516043</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1719300516043</updated>
+    </task>
+    <task id="LOCAL-00021" summary="clean up warnings">
+      <option name="closed" value="true" />
+      <created>1719302040619</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1719302040619</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -331,7 +366,12 @@
     <MESSAGE value="song and tag deletion fix" />
     <MESSAGE value="update song fix" />
     <MESSAGE value="logging" />
-    <option name="LAST_COMMIT_MESSAGE" value="logging" />
+    <MESSAGE value="add tests" />
+    <MESSAGE value="add auth" />
+    <MESSAGE value="fix backedn auth" />
+    <MESSAGE value="clean up ui" />
+    <MESSAGE value="clean up warnings" />
+    <option name="LAST_COMMIT_MESSAGE" value="clean up warnings" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
