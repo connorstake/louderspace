@@ -5,27 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="add auth">
-      <change afterPath="$PROJECT_DIR$/scripts/sql/seed.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/components/ProtectedRoute.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/contexts/AuthContext.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/hooks/useAuth.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/pages/Login.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/services/authApi.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/services/songApi.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/services/userApi.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose-restart.sh" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose-restart.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/authHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/authHandler.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/middleware/authorization.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/middleware/authorization.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/sql/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sql/init.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/sql/seed.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sql/seed.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/src/hooks/useUsers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/hooks/useUsers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/src/pages/SongsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/pages/SongsPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/src/pages/StationsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/pages/StationsPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/src/pages/TagsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/pages/TagsPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/src/routes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/routes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/src/services/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/services/api.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -340,7 +322,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719268095260</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="add auth">
+      <option name="closed" value="true" />
+      <created>1719299415651</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1719299415651</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

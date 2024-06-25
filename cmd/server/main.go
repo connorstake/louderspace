@@ -76,7 +76,7 @@ func main() {
 	protected.HandleFunc("/songs", songAPI.CreateSong).Methods("POST")
 	protected.HandleFunc("/songs", songAPI.GetAllSongs).Methods("GET")
 
-	adminRouter := r.PathPrefix("/admin").Subrouter()
+	adminRouter := protected.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(middleware.RequireRole(models.RoleAdmin))
 
 	adminRouter.HandleFunc("/users", userAPI.Users).Methods("GET")
@@ -99,7 +99,7 @@ func main() {
 	adminRouter.HandleFunc("/stations/{id:[0-9]+}", stationAPI.DeleteStation).Methods("DELETE")
 
 	corsMiddleware := handlers.CORS(
-		handlers.AllowedOrigins([]string{"*"}), // Adjust the allowed origins as needed
+		handlers.AllowedOrigins([]string{"*"}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
 	)

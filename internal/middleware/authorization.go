@@ -37,6 +37,7 @@ func WithUser(next http.Handler) http.Handler {
 			ID:   claims.UserID,
 			Role: claims.Role,
 		}
+		logger.Info("User extracted from token", user)
 		ctx := context.WithValue(r.Context(), UserContextKey, user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
@@ -46,8 +47,9 @@ func RequireRole(role models.Role) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			user, ok := r.Context().Value(UserContextKey).(*models.User)
+			logger.Info("Checking user role", user, role)
 			if !ok || user.Role != role {
-				logger.Error("Forbidden")
+				logger.Error("Forbidden", user, role)
 				http.Error(w, "Forbidden", http.StatusForbidden)
 				return
 			}
