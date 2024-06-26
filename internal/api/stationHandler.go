@@ -72,7 +72,23 @@ func (h *StationAPI) GetSongsForStationByID(w http.ResponseWriter, r *http.Reque
 		http.Error(w, "Invalid station ID", http.StatusBadRequest)
 		return
 	}
-	songs, err := h.stationService.GetSongsForStation(stationID)
+
+	// Extract user ID from the request context or query parameters
+	userIDStr := r.URL.Query().Get("user_id")
+	if userIDStr == "" {
+		logger.Error("Missing user ID")
+		http.Error(w, "Missing user ID", http.StatusBadRequest)
+		return
+	}
+
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		logger.Error("Invalid user ID:", err)
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	songs, err := h.stationService.GetSongsForStationWithFeedback(stationID, userID)
 	if err != nil {
 		logger.Error("Failed to get songs for station:", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)

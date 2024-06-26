@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getSongs, getSongsByStation, createSong, updateSong, deleteSong, getTags } from '../services/songApi';
 import { Tag } from './useTags';
 import { useParams } from 'react-router-dom';
+import useAuth from "./useAuth";
 
 interface Song {
     id: number;
@@ -13,18 +14,27 @@ interface Song {
 }
 
 const useSongs = () => {
+    const { user, loading: authLoading } = useAuth();
     const { stationId } = useParams<{ stationId?: string }>();
     const [songs, setSongs] = useState<Song[]>([]);
     const [tags, setTags] = useState<Tag[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
+    console.log(user)
     useEffect(() => {
+        const userId = user ? user.id : undefined;
         const fetchSongsAndTags = async () => {
+            if (authLoading || (stationId && !user)) {
+                // Wait until authLoading is false and user is loaded when stationId is present
+                return;
+            }
+
+            setLoading(true);
             try {
                 let songsResponse;
                 if (stationId) {
-                    songsResponse = await getSongsByStation(stationId);
+                    songsResponse = await getSongsByStation(stationId, userId);
                 } else {
                     songsResponse = await getSongs();
                 }
@@ -39,7 +49,7 @@ const useSongs = () => {
         };
 
         fetchSongsAndTags();
-    }, [stationId]);
+    }, [stationId, user, authLoading]);
 
     const addSong = async (song: { title: string, artist: string, genre: string, suno_id: string, tags: string[] }) => {
         try {

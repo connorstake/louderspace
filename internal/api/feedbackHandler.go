@@ -32,6 +32,11 @@ func (a *FeedbackAPI) SaveFeedback(w http.ResponseWriter, r *http.Request) {
 	}
 	logger.Info("Saved feedback:", feedback)
 	w.WriteHeader(http.StatusCreated)
+	err := json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+	if err != nil {
+		logger.Error("Failed to encode response:", err)
+		return
+	}
 }
 
 func (a *FeedbackAPI) DeleteFeedback(w http.ResponseWriter, r *http.Request) {

@@ -101,29 +101,6 @@ func (h *SongAPI) GetAllSongs(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(songs)
 }
 
-func (h *SongAPI) GetSongsForStation(w http.ResponseWriter, r *http.Request) {
-	stationIDStr := r.URL.Query().Get("station_id")
-	if stationIDStr == "" {
-		http.Error(w, "Missing station ID", http.StatusBadRequest)
-		return
-	}
-
-	stationID, err := strconv.Atoi(stationIDStr)
-	if err != nil {
-		http.Error(w, "Invalid station ID", http.StatusBadRequest)
-		return
-	}
-
-	songs, err := h.songService.GetSongsForStation(stationID)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(songs)
-}
-
 func (h *SongAPI) UpdateSong(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])

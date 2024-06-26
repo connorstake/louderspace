@@ -32,8 +32,10 @@ CREATE TABLE IF NOT EXISTS feedback (
                                         id SERIAL PRIMARY KEY,
                                         user_id INT NOT NULL REFERENCES users(id),
     song_id INT NOT NULL REFERENCES songs(id),
-    liked BOOLEAN NOT NULL
+    liked BOOLEAN NOT NULL,
+    CONSTRAINT unique_user_song UNIQUE (user_id, song_id)
     );
+
 
 CREATE TABLE IF NOT EXISTS playback_history (
                                                 id SERIAL PRIMARY KEY,

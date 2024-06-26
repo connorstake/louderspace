@@ -13,14 +13,17 @@ type StationManagement interface {
 	GetStation(id int) (*models.Station, error)
 	GetAllStations() ([]*models.Station, error)
 	GetSongsForStation(stationID int) ([]*models.Song, error)
+	GetSongsForStationWithFeedback(stationID, userID int) ([]*models.SongWithFeedback, error)
 }
 
 type StationService struct {
-	stationStorage repositories.StationStorage
+	stationStorage  repositories.StationStorage
+	feedbackStorage repositories.FeedbackStorage
+	songStorage     repositories.SongStorage
 }
 
-func NewStationService(stationStorage repositories.StationStorage) StationManagement {
-	return &StationService{stationStorage}
+func NewStationService(stationStorage repositories.StationStorage, feedbackStorage repositories.FeedbackStorage, songStorage repositories.SongStorage) StationManagement {
+	return &StationService{stationStorage, feedbackStorage, songStorage}
 }
 
 func (s *StationService) CreateStation(name string, tags []string) (*models.Station, error) {
@@ -59,4 +62,38 @@ func (s *StationService) GetSongsForStation(stationID int) ([]*models.Song, erro
 		return nil, err
 	}
 	return s.stationStorage.SongsByTags(station.Tags)
+}
+
+func (s *StationService) GetSongsForStationWithFeedback(stationID, userID int) ([]*models.SongWithFeedback, error) {
+	songs, err := s.songStorage.ByStationID(stationID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get song IDs
+	songIDs := make([]int, len(songs))
+	for i, song := range songs {
+		songIDs[i] = song.ID
+	}
+
+	// Get feedback for the songs
+	feedbackMap, err := s.feedbackStorage.GetFeedbackForUserAndSongs(userID, songIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	// Combine song and feedback information
+	songsWithFeedback := make([]*models.SongWithFeedback, len(songs))
+	for i, song := range songs {
+		liked, ok := feedbackMap[song.ID]
+		if !ok {
+			liked = false
+		}
+		songsWithFeedback[i] = &models.SongWithFeedback{
+			Song:  song,
+			Liked: liked,
+		}
+	}
+
+	return songsWithFeedback, nil
 }
