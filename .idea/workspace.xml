@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="add feedback">
-      <change afterPath="$PROJECT_DIR$/internal/models/songWithFeedback.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/songHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/songHandler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/stationHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/stationHandler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/repositories/feedbackRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repositories/feedbackRepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/repositories/songRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repositories/songRepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/services/stationService.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/stationService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/src/hooks/useSongs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/hooks/useSongs.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/src/services/songApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/services/songApi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/feedbackHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/feedbackHandler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/sql/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sql/init.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,7 +194,7 @@
       <workItem from="1719133190502" duration="22875000" />
       <workItem from="1719223622678" duration="291000" />
       <workItem from="1719223985590" duration="12858000" />
-      <workItem from="1719303090491" duration="19167000" />
+      <workItem from="1719303090491" duration="24239000" />
     </task>
     <task id="LOCAL-00001" summary="User Service initialized">
       <option name="closed" value="true" />
@@ -395,7 +388,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719344373007</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="add feedback">
+      <option name="closed" value="true" />
+      <created>1719348745999</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1719348745999</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
