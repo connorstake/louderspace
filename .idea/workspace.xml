@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="add feedback">
+    <list default="true" id="6305843a-b951-488e-8a0c-fd27fa752f61" name="Changes" comment="some fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/api/feedbackHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/feedbackHandler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/sql/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sql/init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/api/authHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/api/authHandler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/repositories/songRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repositories/songRepository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/src/hooks/useAuth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/hooks/useAuth.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/src/pages/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ui/src/pages/Login.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,22 +35,22 @@
     &quot;assignee&quot;: &quot;connorstake&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/connorstake/louderspace.git",
-    "accountId": "627bbf2c-5a89-47bb-9834-e83f1672ecbe"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/connorstake/louderspace.git&quot;,
+    &quot;accountId&quot;: &quot;627bbf2c-5a89-47bb-9834-e83f1672ecbe&quot;
   },
-  "recentNewPullRequestHead": {
-    "server": {
-      "useHttp": false,
-      "host": "github.com",
-      "port": null,
-      "suffix": null
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
     },
-    "owner": "connorstake",
-    "repository": "louderspace"
+    &quot;owner&quot;: &quot;connorstake&quot;,
+    &quot;repository&quot;: &quot;louderspace&quot;
   }
-}]]></component>
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -79,7 +81,7 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "feedback__api",
+    "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -423,7 +425,8 @@
     <MESSAGE value="clean up ui" />
     <MESSAGE value="clean up warnings" />
     <MESSAGE value="add feedback" />
-    <option name="LAST_COMMIT_MESSAGE" value="add feedback" />
+    <MESSAGE value="some fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="some fixes" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

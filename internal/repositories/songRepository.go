@@ -33,14 +33,20 @@ func (r *SongDatabase) Create(song *models.Song, tags []string) error {
 	query := "INSERT INTO songs (title, artist, genre, suno_id, is_generated, created_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id"
 	err = tx.QueryRow(query, song.Title, song.Artist, song.Genre, song.SunoID, song.IsGenerated, song.CreatedAt).Scan(&song.ID)
 	if err != nil {
-		tx.Rollback()
+		err := tx.Rollback()
+		if err != nil {
+			return err
+		}
 		return err
 	}
 
 	for _, tag := range tags {
 		_, err := tx.Exec("INSERT INTO song_tags (song_id, tag_id) VALUES ($1, (SELECT id FROM tags WHERE name = $2))", song.ID, tag)
 		if err != nil {
-			tx.Rollback()
+			err := tx.Rollback()
+			if err != nil {
+				return err
+			}
 			return err
 		}
 	}
@@ -55,9 +61,15 @@ func (r *SongDatabase) Update(song *models.Song, tags []string) error {
 	}
 	defer func() {
 		if err != nil {
-			tx.Rollback()
+			err := tx.Rollback()
+			if err != nil {
+				return
+			}
 		} else {
-			tx.Commit()
+			err := tx.Commit()
+			if err != nil {
+				return
+			}
 		}
 	}()
 
@@ -153,15 +165,32 @@ func (r *SongDatabase) All() ([]*models.Song, error) {
 
 func (r *SongDatabase) ByStationID(stationID int) ([]*models.Song, error) {
 	var songs []*models.Song
+
+	// Query to get the number of tags for the station
+	stationTagsCountQuery := `
+		SELECT COUNT(t.id)
+		FROM tags t
+		JOIN stations stn ON stn.tags LIKE '%' || t.name || '%'
+		WHERE stn.id = $1
+	`
+	var stationTagsCount int
+	err := r.db.QueryRow(stationTagsCountQuery, stationID).Scan(&stationTagsCount)
+	if err != nil {
+		return nil, err
+	}
+
+	// Query to get songs with at least all the tags of the station
 	query := `
-		SELECT DISTINCT s.id, s.title, s.artist, s.genre, s.suno_id, s.is_generated, s.created_at
+		SELECT s.id, s.title, s.artist, s.genre, s.suno_id, s.is_generated, s.created_at
 		FROM songs s
 		JOIN song_tags st ON s.id = st.song_id
 		JOIN tags t ON st.tag_id = t.id
 		JOIN stations stn ON stn.tags LIKE '%' || t.name || '%'
 		WHERE stn.id = $1
+		GROUP BY s.id, s.title, s.artist, s.genre, s.suno_id, s.is_generated, s.created_at
+		HAVING COUNT(DISTINCT t.id) >= $2
 	`
-	rows, err := r.db.Query(query, stationID)
+	rows, err := r.db.Query(query, stationID, stationTagsCount)
 	if err != nil {
 		return nil, err
 	}
@@ -209,14 +238,20 @@ func (r *SongDatabase) Delete(id int) error {
 	// Clean up related data in the song_tags table if necessary
 	_, err = tx.Exec("DELETE FROM song_tags WHERE song_id = $1", id)
 	if err != nil {
-		tx.Rollback()
+		err := tx.Rollback()
+		if err != nil {
+			return err
+		}
 		return err
 	}
 
 	query := "DELETE FROM songs WHERE id = $1"
 	_, err = tx.Exec(query, id)
 	if err != nil {
-		tx.Rollback()
+		err := tx.Rollback()
+		if err != nil {
+			return err
+		}
 		return err
 	}
 

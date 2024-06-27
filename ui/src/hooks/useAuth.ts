@@ -23,15 +23,14 @@ const useAuth = () => {
             api.get('/me')
                 .then(response => {
                     setUser(response.data);
+                    setLoading(false); // Move this inside the success path
                 })
                 .catch(() => {
                     localStorage.removeItem('token');
-                })
-                .finally(() => {
-                    setLoading(false);
+                    setLoading(false); // Ensure this is set even on error
                 });
         } else {
-            setLoading(false);
+            setLoading(false); // Ensure this is set if there's no token
         }
     }, []);
 

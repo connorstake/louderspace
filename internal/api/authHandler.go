@@ -113,6 +113,11 @@ func (a *AuthAPI) Me(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Info("User info", fullUser)
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(fullUser)
+	err = json.NewEncoder(w).Encode(fullUser)
+	if err != nil {
+		logger.Error("Failed to encode response", err)
+		return
+	}
 }

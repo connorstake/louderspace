@@ -1,22 +1,21 @@
 // src/pages/LoginPage.tsx
 import React, { useState, useEffect } from 'react';
-
-import { TextField, Button, Container, Typography } from '@mui/material';
+import { TextField, Button, Container, Typography, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import useAuth from "../hooks/useAuth";
 
 const LoginPage: React.FC = () => {
-    const { login, user } = useAuth();
+    const { login, user, loading } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (user) {
+        if (!loading && user) {
             navigate('/');
         }
-    }, [user, navigate]);
+    }, [user, loading, navigate]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -26,6 +25,14 @@ const LoginPage: React.FC = () => {
             setError('Invalid username or password');
         }
     };
+
+    if (loading) {
+        return (
+            <Container maxWidth="xs">
+                <CircularProgress />
+            </Container>
+        );
+    }
 
     return (
         <Container maxWidth="xs">
