@@ -35,6 +35,7 @@ func main() {
 	tagStorage := repositories.NewTagDatabase(db)
 	playEventStorage := repositories.NewPlayEventDatabase(db)
 	feedbackStorage := repositories.NewFeedbackDatabase(db)
+	pomodoroSessionStorage := repositories.NewPomodoroSessionDatabase(db)
 
 	userService := services.NewUserService(userStorage)
 	stationService := services.NewStationService(stationStorage, feedbackStorage, songStorage)
@@ -43,6 +44,7 @@ func main() {
 	tagService := services.NewTagService(tagStorage)
 	playEventService := services.NewPlayEventService(playEventStorage)
 	feedbackService := services.NewFeedbackService(feedbackStorage)
+	pomodoroSessionService := services.NewPomodoroSessionService(pomodoroSessionStorage)
 
 	userAPI := api.NewUserAPI(userService)
 	authAPI := api.NewAuthAPI(userService)
@@ -52,6 +54,7 @@ func main() {
 	tagAPI := api.NewTagAPI(tagService)
 	playEventAPI := api.NewPlayEventAPI(playEventService)
 	feedbackAPI := api.NewFeedbackAPI(feedbackService)
+	pomodoroAPI := api.NewPomodoroSessionAPI(pomodoroSessionService)
 
 	r := mux.NewRouter()
 
@@ -80,10 +83,16 @@ func main() {
 	protected.HandleFunc("/playback/rewind", playbackAPI.Rewind).Methods("POST")
 	protected.HandleFunc("/playback/state", playbackAPI.GetPlaybackState).Methods("GET")
 
+	protected.HandleFunc("/pomodoro/start", pomodoroAPI.StartSession).Methods("POST")
+	protected.HandleFunc("/pomodoro/end", pomodoroAPI.EndSession).Methods("POST")
+
 	protected.HandleFunc("/songs", songAPI.GetAllSongs).Methods("GET")
 
 	adminRouter := protected.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(middleware.RequireRole(models.RoleAdmin))
+
+	adminRouter.HandleFunc("/pomodoro/user/{user_id}/sessions", pomodoroAPI.GetSessionsByUser).Methods("GET")
+	adminRouter.HandleFunc("/pomodoro/user/{user_id}/metrics", pomodoroAPI.GetFocusMetrics).Methods("GET")
 
 	adminRouter.HandleFunc("/users", userAPI.Users).Methods("GET")
 
