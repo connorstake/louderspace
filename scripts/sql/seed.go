@@ -205,8 +205,8 @@ func seedStations(db *sql.DB) error {
 		name string
 		tags string
 	}{
-		{"Synthy Lo-fi", "synth, lofi"},
-		{"Classical Lo-fi", "classical, lofi"},
+		{"Coding Den", "synth, lofi"},
+		{"Reading Room", "classical, lofi"},
 	}
 
 	for _, s := range stations {

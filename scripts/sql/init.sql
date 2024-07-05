@@ -79,3 +79,13 @@ CREATE TABLE song_play_aggregates (
                                       total_duration INT DEFAULT 0, -- duration in seconds
                                       PRIMARY KEY (song_id)
 );
+
+CREATE TABLE IF NOT EXISTS pomodoro_sessions (
+                                                 id SERIAL PRIMARY KEY,
+                                                 user_id INT NOT NULL REFERENCES users(id),
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP,
+    duration INT NOT NULL,
+    break_duration INT NOT NULL,
+    status VARCHAR(20) NOT NULL
+    );
