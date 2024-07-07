@@ -1,1 +1,1 @@
-web: louderspace
+web: bin/louderspace
