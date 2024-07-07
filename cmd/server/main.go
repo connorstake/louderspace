@@ -14,10 +14,16 @@ import (
 	"louderspace/internal/repositories"
 	"louderspace/internal/services"
 	"net/http"
+	"os"
 )
 
 func main() {
 	logger.Init()
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default port if not set
+	}
 
 	cfg, err := config.LoadConfig()
 	if err != nil {
@@ -120,6 +126,7 @@ func main() {
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
 	)
 
-	log.Println("server is running on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", corsMiddleware(r)))
+	log.Printf("server is running on port %s", port)
+
+	log.Fatal(http.ListenAndServe(":"+port, corsMiddleware(r)))
 }
