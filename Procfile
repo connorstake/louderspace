@@ -1,1 +1,1 @@
-web: bin/louderspace
+web: web: ./main
