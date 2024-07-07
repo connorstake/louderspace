@@ -70,6 +70,10 @@ func main() {
 	// Public routes
 	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
+		_, err := w.Write([]byte("OK"))
+		if err != nil {
+			return
+		}
 	}).Methods("GET")
 	r.HandleFunc("/register", authAPI.Register).Methods("POST")
 	r.HandleFunc("/login", authAPI.Login).Methods("POST")
