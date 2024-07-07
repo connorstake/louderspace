@@ -1,1 +1,1 @@
-web: ./cmd/server/main
+web: bin/louderspace
