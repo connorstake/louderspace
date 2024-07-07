@@ -3,22 +3,34 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/lib/pq"
 	"log"
 
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
+	"os"
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "testuser"
-	password = "testpassword"
-	dbname   = "louderspace"
-)
+func init() {
+	// loads values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+}
 
 func main() {
+	host, _ := os.LookupEnv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+	for _, value := range os.Environ() {
+		fmt.Println(value)
+	}
+
+	fmt.Printf("host=%s port=%d user=%s ", host, port, user)
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)

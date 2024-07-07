@@ -1,0 +1,14 @@
+##Heroku Deploy
+
+docker build -t louderspace --platform linux/amd64 .
+docker tag louderspace registry.heroku.com/louderspace/web
+docker push registry.heroku.com/louderspace/web
+heroku container:release web -a louderspace
+
+
+##Seeding
+
+
+To seed the database, ensure the environment variable has the correct database configuration.
+Run:
+./docker-compose-restart.sh
