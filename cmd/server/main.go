@@ -68,6 +68,9 @@ func main() {
 	r.Use(middleware.LoggingMiddleware)
 
 	// Public routes
+	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}).Methods("GET")
 	r.HandleFunc("/register", authAPI.Register).Methods("POST")
 	r.HandleFunc("/login", authAPI.Login).Methods("POST")
 
